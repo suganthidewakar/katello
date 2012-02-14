@@ -16,7 +16,7 @@ module Navigation
         helper_method :subscriptions_navigation
       end
     end
-    def menu_systems
+    def menu_subscriptions
       {:key => :subscriptions,
        :name => _("Subscriptions"),
         :url => :sub_level,

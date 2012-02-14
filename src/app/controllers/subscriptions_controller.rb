@@ -25,6 +25,8 @@ class SubscriptionsController < ApplicationController
     {
       :index => read_org,
       :items => read_org,
+      :show => lambda{true},
+      :edit => lambda{true},
     }
   end
 
@@ -36,6 +38,7 @@ class SubscriptionsController < ApplicationController
     order = split_order(params[:order])
     search = params[:search]
     offset = params[:offset]
+    filters = {}
 
     # TODO: Call as before_filter?
     find_subscriptions
@@ -43,21 +46,29 @@ class SubscriptionsController < ApplicationController
     if offset
       render :text => "" and return if @subscriptions.empty?
 
-      options = {:list_partial => 'subscriptions/list_subscriptions'}
-      render_panel_items(@subscriptions, options, nil, offset)
+      #options = {:list_partial => 'subscriptions/list_subscriptions', :accessor => "product_id", :name => controller_display_name}
+      render_panel_items(@subscriptions, @panel_options, nil, offset)
     else
       @subscriptions = @subscriptions[0..current_user.page_size]
 
-      options = {:list_partial => 'subscriptions/list_subscriptions'}
-      render_panel_items(@subscriptions, options, nil, offset)
+      #options = {:list_partial => 'subscriptions/list_subscriptions', :accessor => "product_id", :name => controller_display_name}
+      render_panel_items(@subscriptions, @panel_options, nil, offset)
     end
 
-    #render_panel_direct(Candlepin::Pool, @panel_options, search, params[:offset], order,
+    #render_panel_direct(Product, @panel_options, search, params[:offset], order,
     #                    {:filter=>filters, :load=>true})
   end
 
+  def edit
+    render :partial => "edit", :layout => "tupane_layout", :locals => {:subscription => @subscription, :editable => false, :name => controller_display_name}
+  end
+
   def show
-    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :accessor=>"id", :columns => COLUMNS.keys, :noblock => 1}
+    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :accessor=>"product_id", :columns => COLUMNS.keys, :noblock => 1}
+  end
+
+  def products
+    #TODO
   end
 
   private
@@ -71,12 +82,19 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_subscription
-    @subscription = Candlepin::Owner.find params[:id]
+    @subscription = Product.find(params[:id])
   end
 
   def find_subscriptions
-    all_subs = Candlepin::Owner.pools current_organization.cp_key
-    @subscriptions = reformat_subscriptions(all_subs)
+    pools = Candlepin::Owner.pools current_organization.cp_key
+    #@subscriptions = reformat_subscriptions(pools))
+    products = []
+    pools.each do |pool|
+      product = Product.where(:cp_id => pool["productId"]).first
+      products << product
+    end
+
+    @subscriptions = products
   end
 
   # Reformat the subscriptions from our API to a format that the headpin HAML expects
@@ -90,7 +108,8 @@ class SubscriptionsController < ApplicationController
     all_subs.each do |sub|
       product = Product.where(:cp_id =>sub["productId"]).first
       converted_product = OpenStruct.new
-      converted_product.id = product.id
+      converted_product.product_id = product.id
+      converted_product.cp_id = sub["productId"]
       converted_product.support_level = product.support_level
       converted_product.arch = product.arch
       # Convert to OpenStruct so we can access fields with dot notation
@@ -131,7 +150,7 @@ class SubscriptionsController < ApplicationController
                       :ajax_load  => true,
                       :ajax_scroll => items_subscriptions_path(),
                       :actions => nil,
-                      :search_class => nil
+                      :search_class => Product
                       }
   end
 
