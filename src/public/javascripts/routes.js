@@ -184,6 +184,10 @@
   repositories_api_organization_product_path: function(_organization_id, _id, options) {
   return Utils.build_path(3, ["/api/organizations/", "/products/", "/repositories"], arguments)
   },
+// items_subscriptions => /subscriptions/items(.:format)
+  items_subscriptions_path: function(options) {
+  return Utils.build_path(0, ["/subscriptions/items"], ["format"], arguments)
+  },
 // edit_api_changeset_distribution => /api/changesets/:changeset_id/distributions/:id/edit(.:format)
   edit_api_changeset_distribution_path: function(_changeset_id, _id, options) {
   return Utils.build_path(3, ["/api/changesets/", "/distributions/", "/edit"], arguments)

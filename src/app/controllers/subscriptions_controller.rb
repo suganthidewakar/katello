@@ -13,14 +13,68 @@ require 'ostruct'
 
 class SubscriptionsController < ApplicationController
 
+  before_filter :find_subscription, :except=>[:index, :items]
+  before_filter :authorize
+  before_filter :setup_options, :only=>[:index, :items]
+
+  # two pane columns and mapping for sortable fields
+  COLUMNS = {'name' => 'name_sort'}
+
   def rules
+    read_org = lambda{current_organization && current_organization.readable?}
     {
-      :index => lambda{current_organization && current_organization.readable?}
+      :index => read_org,
+      :items => read_org,
     }
   end
 
 
   def index
+  end
+
+  def items
+    order = split_order(params[:order])
+    search = params[:search]
+    offset = params[:offset]
+
+    # TODO: Call as before_filter?
+    find_subscriptions
+
+    if offset
+      render :text => "" and return if @subscriptions.empty?
+
+      options = {:list_partial => 'subscriptions/list_subscriptions'}
+      render_panel_items(@subscriptions, options, nil, offset)
+    else
+      @subscriptions = @subscriptions[0..current_user.page_size]
+
+      options = {:list_partial => 'subscriptions/list_subscriptions'}
+      render_panel_items(@subscriptions, options, nil, offset)
+    end
+
+    #render_panel_direct(Candlepin::Pool, @panel_options, search, params[:offset], order,
+    #                    {:filter=>filters, :load=>true})
+  end
+
+  def show
+    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :accessor=>"id", :columns => COLUMNS.keys, :noblock => 1}
+  end
+
+  private
+
+  def split_order order
+    if order
+      order.split
+    else
+      [:name_sort, "ASC"]
+    end
+  end
+
+  def find_subscription
+    @subscription = Candlepin::Owner.find params[:id]
+  end
+
+  def find_subscriptions
     all_subs = Candlepin::Owner.pools current_organization.cp_key
     @subscriptions = reformat_subscriptions(all_subs)
   end
@@ -63,6 +117,26 @@ class SubscriptionsController < ApplicationController
       subscriptions << converted_sub if !subscriptions.include? converted_sub
     end
     subscriptions
+  end
+
+  def setup_options
+    @panel_options = { :title => _('Subscriptions'),
+                      :col => ["name"],
+                      :titles => [_("Name")],
+                      :custom_rows => true,
+                      :enable_create => false,
+                      :enable_sort => true,
+                      :name => controller_display_name,
+                      :list_partial => 'subscriptions/list_subscriptions',
+                      :ajax_load  => true,
+                      :ajax_scroll => items_subscriptions_path(),
+                      :actions => nil,
+                      :search_class => nil
+                      }
+  end
+
+  def controller_display_name
+    return 'subscription'
   end
 
 end
