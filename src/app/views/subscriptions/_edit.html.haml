@@ -6,3 +6,47 @@
     %input#panel_element_id{:name=>@subscription.id, :type=>"hidden", :value=>"#{name}_#{subscription.id.to_s}", "data-ajax_url"=>url_for(:action=>"update")}
     .grid_8
       %h5 #{_("Subscription Info")}
+    .grid_8#subscription_info
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :consumed, :consumed, _("Consumed")
+        .grid_5.la
+          = _("%d of %d") % [1, 2]
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :date_range, :date_range, _("Begin / End")
+        .grid_5.la
+          = _("%s  to  %s") % ["2012-01-31", "2013-01-31"]
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :contract, :contract, _("Contract")
+        .grid_5.la
+          = "123456"
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :support_level, :support_level, _("Support Level")
+        .grid_5.la
+          = "SELF-SUPPORT"
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :arch, :arch, _("Arch")
+        .grid_5.la
+          = "x86_64"
+    .clear
+    .grid_8
+      %h5 #{_("Provided Products")}
+    .grid_8#contained_products
+      %fieldset
+        .grid_2.ra.fieldset
+        .grid_5.la
+          = "Red Hat Enterprise Linux Server"
+      %fieldset
+        .grid_5.la
+          = "Resilient Storage"
+    .clear
+    .grid_8
+      %h5 #{_("Available Bonus Subscriptions")}
+    .grid_8#bonus_subscriptions
+      %fieldset
+        .grid_5.la
+          = "Resilient Storage"

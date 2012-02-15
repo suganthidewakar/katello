@@ -87,7 +87,6 @@ class SubscriptionsController < ApplicationController
 
   def find_subscriptions
     pools = Candlepin::Owner.pools current_organization.cp_key
-    #@subscriptions = reformat_subscriptions(pools))
     products = []
     pools.each do |pool|
       product = Product.where(:cp_id => pool["productId"]).first
