@@ -85,6 +85,7 @@ javascripts:
     - public/javascripts/changeset_edit.js
   subscription:
     - public/javascripts/subscription.js
+    - public/javascripts/headpin.sparkline.js
   system:
     - public/javascripts/systems.js
     - public/javascripts/jquery/plugins/ui.spinner.js

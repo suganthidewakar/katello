@@ -27,6 +27,7 @@ class SubscriptionsController < ApplicationController
       :items => read_org,
       :show => lambda{true},
       :edit => lambda{true},
+      :products => lambda{true}
     }
   end
 
@@ -68,7 +69,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def products
-    #TODO
+    render :partial=>"products", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
   end
 
   private

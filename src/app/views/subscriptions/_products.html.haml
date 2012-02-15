@@ -1,0 +1,56 @@
+= javascript :edit_helpers
+= include_javascripts :treetable
+= render :partial=>"subscriptions_tupane_header_nav"
+
+= content_for :content do
+  .grid_8
+    .tree
+      %table#products_table
+        %thead
+          %th #{_("Provided Product")}
+        %tbody
+          - for product in ["product1", "product2"]
+            - cycle_class = cycle("", "alt")
+            %tr{:id => "#{product}", :class => cycle_class}
+              %td
+                #{product}
+            - for productContent in ["content1", "content2"]
+              %tr{:class => "child-of-#{product} " + cycle_class}
+                %td
+                  %ul
+                    %li
+                      %hr{:width=>"75%"}
+                    %li
+                      = _('GPG Key URL: ')
+                      -# - product_content.content.gpgUrl.split(',').each do |link|
+                      - ["url1,url2,url3"].split(',').each do |link|
+                        - if link == 'http://'
+                          = _("None")
+                        - else
+                          %a{:href => "#{link}"}
+                            = link
+                    %li
+                      -# TODO: This content url needs to get the source prefix (http:...) from somewhere
+                      -# - link = product_content.content.contentUrl
+                      - link = "some/url"
+                      = _('Content Download URL: ')
+                      -# %a{:href => "#{link}"}
+                      -#  = link
+                      = link
+                    %li
+                      = _('Repo Type: ')
+                      = "product_content.content.type"
+                    %li
+                      = _('Enabled by Default: ')
+                      = "product_content.enabled"
+
+= javascript do
+  :javascript
+    $(document).ready(function() {
+      $("#products_table").treeTable({
+        expandable: true,
+        initialState: "collapsed",
+        clickableNodeNames: true,
+        onNodeShow: function(){$.sparkline_display_visible()}
+      });
+    });
