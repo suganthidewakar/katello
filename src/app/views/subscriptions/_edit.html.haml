@@ -11,38 +11,41 @@
         .grid_2.ra.fieldset
           =label :consumed, :consumed, _("Consumed")
         .grid_5.la
-          = _("%d of %d") % [1, 2]
+          - if @subscription.quantity < 0
+            = _("Unlimited")
+          - else
+            = _("%d of %d") % [@subscription.consumed, @subscription.quantity]
       %fieldset
         .grid_2.ra.fieldset
           =label :date_range, :date_range, _("Begin / End")
         .grid_5.la
-          = _("%s  to  %s") % ["2012-01-31", "2013-01-31"]
+          = _("%s / %s") % [format_time(@subscription.startDate), format_time(@subscription.endDate)]
       %fieldset
         .grid_2.ra.fieldset
           =label :contract, :contract, _("Contract")
         .grid_5.la
-          = "123456"
+          = @subscription.contractNumber
       %fieldset
         .grid_2.ra.fieldset
           =label :support_level, :support_level, _("Support Level")
         .grid_5.la
-          = "SELF-SUPPORT"
+          = @subscription.support_level
       %fieldset
         .grid_2.ra.fieldset
           =label :arch, :arch, _("Arch")
         .grid_5.la
-          = "x86_64"
-    .clear
-    .grid_8
-      %h5 #{_("Provided Products")}
-    .grid_8#contained_products
-      %fieldset
-        .grid_2.ra.fieldset
-        .grid_5.la
-          = "Red Hat Enterprise Linux Server"
-      %fieldset
-        .grid_5.la
-          = "Resilient Storage"
+          = @subscription.arch
+    - if @subscription.providedProducts.length > 0
+      .clear
+      .grid_8
+        %h5 #{_("Provided Products")}
+      .grid_8#provided_products
+        %fieldset
+          - @subscription.providedProducts.each do |providedProduct|
+            .grid_2.ra.fieldset
+            .grid_5.la
+              = providedProduct['productName']
+
     .clear
     .grid_8
       %h5 #{_("Available Bonus Subscriptions")}

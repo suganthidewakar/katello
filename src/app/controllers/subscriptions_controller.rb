@@ -83,20 +83,58 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_subscription
-    @subscription = Product.find(params[:id])
+    product = Product.find(params[:id])
+    @subscription = populate_subscription product
   end
 
   def find_subscriptions
     pools = Candlepin::Owner.pools current_organization.cp_key
     products = []
     pools.each do |pool|
-      product = Product.where(:cp_id => pool["productId"]).first
+      # Bonus pools have their sourceEntitlement set
+      # TODO: Does the count of the parent pool get its quantity updated?
+      next if pool['sourceEntitlement'] != nil
+
+      product = Product.where(:cp_id => pool['productId']).first
       products << product
     end
 
     @subscriptions = products
   end
 
+  # Package up subscription details for consumption by view layer
+  def populate_subscription(product)
+
+    cp_pool = Candlepin::Owner.pools(current_organization.cp_key, {:product => product.cp_id}).first
+    cp_product = Candlepin::Product.get(product.cp_id).first
+
+    subscription = OpenStruct.new cp_pool
+    #subscription.consumed_stats = converted_stats
+    subscription.product = cp_product
+    subscription.startDate = Date.parse(subscription.startDate)
+    subscription.endDate = Date.parse(subscription.endDate)
+
+    # Other interesting attributes for easier access
+    subscription.machine_type = ''
+    subscription.support_level = ''
+    cp_product['attributes'].each do |attr|
+      if attr['name'] == 'virt_only'
+        if attr['value'] == 'true'
+          subscription.machine_type = _('Virtual')
+        elsif attr['value'] == 'false'
+          subscription.machine_type = _('Physical')
+        end
+      elsif attr['name'] == 'support_level'
+        subscription.support_level = attr['value']
+      elsif attr['name'] == 'arch'
+        subscription.arch = attr['value']
+      end
+    end
+
+    subscription
+  end
+
+=begin
   # Reformat the subscriptions from our API to a format that the headpin HAML expects
   def reformat_subscriptions(all_subs)
     subscriptions = []
@@ -137,6 +175,7 @@ class SubscriptionsController < ApplicationController
     end
     subscriptions
   end
+=end
 
   def setup_options
     @panel_options = { :title => _('Subscriptions'),
