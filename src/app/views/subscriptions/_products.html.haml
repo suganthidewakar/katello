@@ -9,13 +9,13 @@
         %thead
           %th #{_("Provided Product")}
         %tbody
-          - for product in ["product1", "product2"]
+          - @subscriptoin.providedProducts.each do |product|
             - cycle_class = cycle("", "alt")
-            %tr{:id => "#{product}", :class => cycle_class}
+            %tr{:id => "#{product.name}", :class => cycle_class}
               %td
-                #{product}
+                #{product.name}
             - for productContent in ["content1", "content2"]
-              %tr{:class => "child-of-#{product} " + cycle_class}
+              %tr{:class => "child-of-#{product.name} " + cycle_class}
                 %td
                   %ul
                     %li
