@@ -4,13 +4,13 @@
 = content_for :content do
   #subscription
     %input#panel_element_id{:name=>@subscription.id, :type=>"hidden", :value=>"#{name}_#{subscription.id.to_s}", "data-ajax_url"=>url_for(:action=>"update")}
-    .grid_8
+    .grid_10
       %h5 #{_("Subscription Info")}
-    .grid_8#subscription_info
+    .grid_10#subscription_info
       %fieldset
         .grid_2.ra.fieldset
           =label :consumed, :consumed, _("Consumed")
-        .grid_5.la
+        .grid_8.la
           - if @subscription.quantity < 0
             = _("Unlimited")
           - else
@@ -18,38 +18,46 @@
       %fieldset
         .grid_2.ra.fieldset
           =label :date_range, :date_range, _("Begin / End")
-        .grid_5.la
+        .grid_8.la
           = _("%s / %s") % [format_time(@subscription.startDate), format_time(@subscription.endDate)]
       %fieldset
         .grid_2.ra.fieldset
           =label :contract, :contract, _("Contract")
-        .grid_5.la
+        .grid_8.la
           = @subscription.contractNumber
       %fieldset
         .grid_2.ra.fieldset
           =label :support_level, :support_level, _("Support Level")
-        .grid_5.la
+        .grid_8.la
           = @subscription.support_level
       %fieldset
         .grid_2.ra.fieldset
           =label :arch, :arch, _("Arch")
-        .grid_5.la
+        .grid_8.la
           = @subscription.arch
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :systype, :systype, _("System Type")
+        .grid_8.la
+          = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
+      - if !@subscription.source_pool_id.nil?
+        %fieldset
+          .grid_2.ra.fieldset
+            =label :sourcepool, :sourcepool, _("Bonus From")
+          .grid_8.la
+            = subscriptions_pool_link_helper(@subscription.source_pool_id)
+      - if !@subscription.requires_host_id.nil?
+        %fieldset
+          .grid_2.ra.fieldset
+            =label :host, :host, _("Required Host")
+          .grid_8.la
+            = @subscription.requires_host_id
     - if @subscription.providedProducts.length > 0
       .clear
-      .grid_8
+      .grid_10
         %h5 #{_("Provided Products")}
-      .grid_8#provided_products
+      .grid_10#provided_products
         %fieldset
           - @subscription.providedProducts.each do |providedProduct|
-            .grid_2.ra.fieldset
-            .grid_5.la
+            .grid_8.la
               = providedProduct['productName']
-
-    .clear
-    .grid_8
-      %h5 #{_("Included Bonus Subscriptions")}
-    .grid_8#bonus_subscriptions
-      %fieldset
-        .grid_5.la
-          = "????Resilient Storage"

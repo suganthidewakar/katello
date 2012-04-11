@@ -1,5 +1,14 @@
 %div
   %div{:class=>'column_1'}
-    %div.one-line-ellipsis#heading_title{:style=>"padding-top: 2px;"}
-      = item.send('productName')
+    .status_icon{:class => "#{item.sourceEntitlement ? 'yellow' : 'green'}"}
+    %div.one-line-ellipsis{:style=>"padding-top: 2px; font-weight: bold;"}
+      = item.productName
+%div
+  %div{:class=>'column_2'}
+    - if item.quantity < 0
+      = _("Consumed: Unlimited")
+    - else
+      = _("Consumed: %d of %d") % [item.consumed, item.quantity]
+  %div{:class=>'column_2'}
+    = _("SLA: %s") % item.support_level
 .arrow-right
