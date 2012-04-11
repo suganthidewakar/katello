@@ -83,33 +83,40 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_subscription
-    product = Product.find(params[:id])
-    @subscription = populate_subscription product
+    cp_pool = Candlepin::Pool.find(params[:id])
+    cp_product = Candlepin::Product.get(cp_pool['productId']).first
+    @subscription = populate_subscription(cp_pool, cp_product)
   end
 
   def find_subscriptions
     pools = Candlepin::Owner.pools current_organization.cp_key
-    products = []
+    @subscriptions = []
+
+    # Cache products to avoid duplicating calls to candlepin
+    products = {}
+
     pools.each do |pool|
       # Bonus pools have their sourceEntitlement set
       # TODO: Does the count of the parent pool get its quantity updated?
       next if pool['sourceEntitlement'] != nil
 
-      product = Product.where(:cp_id => pool['productId']).first
-      products << product
+      product = products[pool['productId']]
+      if !product
+        product = Candlepin::Product.get(pool['productId']).first
+        products[pool['productId']] = product
+      end
+      @subscriptions << populate_subscription(pool, product)
     end
 
-    @subscriptions = products
+    @subscriptions
   end
 
   # Package up subscription details for consumption by view layer
-  def populate_subscription(product)
-
-    cp_pool = Candlepin::Owner.pools(current_organization.cp_key, {:product => product.cp_id}).first
-    cp_product = Candlepin::Product.get(product.cp_id).first
+  def populate_subscription(cp_pool, cp_product)
 
     subscription = OpenStruct.new cp_pool
     #subscription.consumed_stats = converted_stats
+    subscription.cp_id = cp_pool['id']
     subscription.product = cp_product
     subscription.startDate = Date.parse(subscription.startDate)
     subscription.endDate = Date.parse(subscription.endDate)
@@ -189,7 +196,8 @@ class SubscriptionsController < ApplicationController
                       :ajax_load  => true,
                       :ajax_scroll => items_subscriptions_path(),
                       :actions => nil,
-                      :search_class => Product
+                      :search_class => Product,
+                      :accessor => "cp_id"
                       }
   end
 
