@@ -17,4 +17,11 @@ module SubscriptionsHelper
     link_to pool['productName'], root_path + "subscriptions#panel=subscription_" + pool_id
   end
 
+  def subscriptions_product_helper product_id
+    cp_product = Candlepin::Product.get(product_id).first
+    product = OpenStruct.new cp_product
+    product.cp_id = cp_product['id']
+    product
+  end
+
 end

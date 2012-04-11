@@ -67,13 +67,13 @@ module Navigation
       [
         { :key => :details,
           :name =>_("Details"),
-          :url => lambda{edit_subscription_path(@subscription.id)},
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class=>"navigation_element"},
         },
         { :key => :products,
           :name =>_("Products"),
-          :url => lambda{products_subscription_path(@subscription.id)},
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
           :options => {:class=>"navigation_element"}
         }
