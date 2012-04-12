@@ -41,7 +41,6 @@ class SubscriptionsController < ApplicationController
     offset = params[:offset]
     filters = {}
 
-    # TODO: Call as before_filter?
     if search.nil?
       find_subscriptions
     else
@@ -49,9 +48,7 @@ class SubscriptionsController < ApplicationController
       pools = Candlepin::Owner.pools current_organization.cp_key
       Pool.index_pools pools
 
-      x = Pool.search(search, offset, current_user.page_size)
-      render :json => x
-      return
+      @subscriptions = Pool.search(search, offset, current_user.page_size)
     end
 
     if offset
