@@ -24,4 +24,7 @@ task :reindex=>["environment", "clear_search_indices"]  do
     repo.index_errata
   }
 
+  print "Re-indexing Pools\n"
+  print "TODO: ^^"
+
 end

@@ -42,7 +42,15 @@ class SubscriptionsController < ApplicationController
     filters = {}
 
     # TODO: Call as before_filter?
-    find_subscriptions
+    if search.nil?
+      find_subscriptions
+    else
+      # TODO: ???? temp
+      Pool.index_pools pools
+
+      x = Pool.search(search, offset, current_user.page_size)
+      @subscriptions = []
+    end
 
     if offset
       render :text => "" and return if @subscriptions.empty?
@@ -94,6 +102,10 @@ class SubscriptionsController < ApplicationController
 
   def find_subscriptions
     pools = Candlepin::Owner.pools current_organization.cp_key
+
+    # Update elastic-search
+    Pool.index_pools pools
+
     @subscriptions = []
 
     # Cache products to avoid duplicating calls to candlepin

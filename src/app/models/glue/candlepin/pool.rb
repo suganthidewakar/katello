@@ -10,9 +10,70 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
+require_dependency 'resources/candlepin'
+require 'util/search'
 
 module Glue::Candlepin::Pool
+
+=begin
+  def self.find id
+    pool_json = Candlepin::Pool.find_as_json(id)
+    Glue::Candlepin::Pool.new(pool_json) if not pool_json.nil?
+  end
+
+  attr_accessor :name
+
+  def initialize(params = {})
+    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
+
+  def self.name_search query, number=15
+    return [] if !Tire.index(self.index).exists?
+    start = 0
+
+    query = Katello::Search::filter_input query
+    query = "name_autocomplete:#{query}"
+
+    search = Tire.search self.index do
+      fields [:name]
+      query do
+        string query
+      end
+    end
+    to_ret = []
+    search.results.each{|pkg|
+       to_ret << pkg.name if !to_ret.include?(pkg.name)
+       break if to_ret.size == number
+    }
+    return to_ret
+  end
+
+  def self.search query, start, page_size, sort=[:name_sort, "ASC"]
+    return [] if !Tire.index(self.index).exists?
+
+    all_rows = query.blank? #if blank, get all rows
+
+    search = Tire.search self.index do
+      query do
+        if all_rows
+          all
+        else
+          string query, {:default_field=>'name'}
+        end
+      end
+
+      if page_size > 0
+       size page_size
+       from start
+      end
+
+      sort { by sort[0], sort[1] } unless !all_rows
+    end
+    return search.results
+  rescue
+    return []
+  end
+=end
 
   def self.included(base)
     base.send :include, LazyAccessor
@@ -56,9 +117,9 @@ module Glue::Candlepin::Pool
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
         @productId = attrs["productId"]
-        super(:cp_id => attrs['id'])
+        #super(:cp_id => attrs['id'])
       else
-        super
+        #super
       end
     end
 

@@ -381,6 +381,11 @@ module Candlepin
         JSON.parse(pool_json).with_indifferent_access
       end
 
+      def find_as_json pool_id
+        pool_json = self.get(path(pool_id), self.default_headers).body
+        JSON.parse(pool_json)
+      end
+
       def get_for_owner owner_key
         pools_json = self.get("/candlepin/owners/#{owner_key}/pools", self.default_headers).body
         JSON.parse(pools_json)
