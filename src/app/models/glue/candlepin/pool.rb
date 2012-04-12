@@ -117,6 +117,7 @@ module Glue::Candlepin::Pool
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
         @productId = attrs["productId"]
+        @cp_id = attrs['id']
         #super(:cp_id => attrs['id'])
       else
         #super

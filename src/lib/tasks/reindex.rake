@@ -25,6 +25,6 @@ task :reindex=>["environment", "clear_search_indices"]  do
   }
 
   print "Re-indexing Pools\n"
-  print "TODO: ^^"
+  Pool.index_pools Candlepin::Pool.all
 
 end

@@ -18,7 +18,10 @@ class Pool
 
   def index_options
     {
-      "_type" => :pool
+      "_type" => :pool,
+      "id" => @cp_id,
+      "name" => @productName,
+      "name_autocomplete" => @productName
     }
   end
 
@@ -70,9 +73,7 @@ class Pool
   def self.index_pools cp_pools
     pools = cp_pools.collect{ |cp_pool|
       pool = self.find(cp_pool['id'])
-      yyy = pool.as_json
-      xxx = pool.as_json.merge(pool.index_options)
-      xxx
+      pool.as_json.merge(pool.index_options)
     }
     Tire.index Pool.index do
       create :settings => Pool.index_settings, :mappings => Pool.index_mapping

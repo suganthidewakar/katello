@@ -381,11 +381,6 @@ module Candlepin
         JSON.parse(pool_json).with_indifferent_access
       end
 
-      def find_as_json pool_id
-        pool_json = self.get(path(pool_id), self.default_headers).body
-        JSON.parse(pool_json)
-      end
-
       def get_for_owner owner_key
         pools_json = self.get("/candlepin/owners/#{owner_key}/pools", self.default_headers).body
         JSON.parse(pools_json)
@@ -394,6 +389,11 @@ module Candlepin
       def destroy id
         raise ArgumentError, "pool id has to be specified" unless id
         self.delete(path(id), self.default_headers).code.to_i
+      end
+
+      def all
+        pools_json = self.get(path, self.default_headers).body
+        JSON.parse(pools_json)
       end
 
       def path id=nil
