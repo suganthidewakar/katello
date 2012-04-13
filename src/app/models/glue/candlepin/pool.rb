@@ -110,17 +110,61 @@ module Glue::Candlepin::Pool
       if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
         @productName = attrs["productName"]
-        @startDate = attrs["startDate"]
-        @endDate = attrs["endDate"]
+        @startDate = Date.parse(attrs["startDate"])
+        @endDate = Date.parse(attrs["endDate"])
         @consumed = attrs["consumed"]
         @quantity = attrs["quantity"]
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
         @productId = attrs["productId"]
         @cp_id = attrs['id']
-        #super(:cp_id => attrs['id'])
-      else
-        #super
+        @productId = attrs['productId']
+        @accountNumber = attrs['accountNumber']
+        @contractNumber = attrs['contractNumber']
+
+        @sourcePoolId = ""
+        @hostId = ""
+        @virtOnly = false
+        @poolDerived = false
+        attrs['attributes'].each do |attr|
+          if attr['name'] == 'source_pool_id'
+            @sourcePoolId = attr['value']
+          elsif attr['name'] == 'requires_host'
+            @hostId = attr['value']
+          elsif attr['name'] == 'virt_only'
+            @virtOnly = attr['value'] == 'true' ? true : false
+          elsif attr['name'] == 'pool_derived'
+            @poolDerived = attr['value'] == 'true' ? true : false
+          end
+        end
+
+        @virtLimit = 0
+        @supportType = ""
+        @arch = ""
+        @supportLevel = ""
+        @sockets = 0
+        @description = ""
+        @productFamily = ""
+        @variant = ""
+        attrs['productAttributes'].each do |attr|
+          if attr['name'] == 'virt_limit'
+            @virtLimit = attr['value'].to_i
+          elsif attr['name'] == 'support_type'
+            @supportType = attr['value']
+          elsif attr['name'] == 'arch'
+            @arch = attr['value']
+          elsif attr['name'] == 'support_level'
+            @supportLevel = attr['value']
+          elsif attr['name'] == 'sockets'
+            @sockets = attr['value'].to_i
+          elsif attr['name'] == 'description'
+            @description = attr['value']
+          elsif attr['name'] == 'product_family'
+            @productFamily = attr['value']
+          elsif attr['name'] == 'variant'
+            @variant = attr['value']
+          end
+        end
       end
     end
 

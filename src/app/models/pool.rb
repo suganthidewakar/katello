@@ -16,12 +16,38 @@ class Pool
   include Glue::Candlepin::Pool
   include LazyAccessor
 
+  def self.display_attributes
+    ['name', 'sla', 'start', 'end', 'consumed', 'product', 'account', 'contract', 'virtual']
+  end
+
   def index_options
     {
-      "_type" => :pool,
-      "id" => @cp_id,
-      "name" => @productName,
-      "name_autocomplete" => @productName
+      "_type"     => :pool,
+      "id"        => @cp_id,
+      "name"      => @productName,
+      "start"     => @startDate,
+      "end"       => @endDate,
+      "product"   => @productId,
+      "account"   => @accountNumber,
+      "contract"  => @contractNumber,
+      "sla"       => @supportLevel,
+      "virtual"   => @virtOnly
+    }
+  end
+
+  def self.index_mapping
+    {
+      :pool => {
+        :properties => {
+          :name         => {:type=>'string', :analyzer=>:kt_name_analyzer},
+          :name_sort    => {:type=>'string', :index=>:not_analyzed},
+          :all          => {:type=>'string'},
+          :begin        => {:type=>'date'},
+          :end          => {:type=>'date'},
+          :sockets      => {:type=>'long'},
+          :sla          => {:type=>'string'}
+        }
+      }
     }
   end
 
@@ -36,28 +62,9 @@ class Pool
                         "min_gram"  => 1,
                         "max_gram"  => 30
                     }
-                },
-                "analyzer" => {
-                    "autcomplete_name_analyzer" => {
-                        "type"      => "custom",
-                        "tokenizer" => "keyword",
-                        "filter"    => ["standard", "lowercase", "asciifolding", "ngram_filter"]
-                    }
                 }.merge(Katello::Search::custom_analzyers)
             }
         }
-    }
-  end
-
-  def self.index_mapping
-    {
-      :pool => {
-        :properties => {
-          :name          => { :type=> 'string', :analyzer=>:kt_name_analyzer},
-          :name_autocomplete  => { :type=> 'string', :analyzer=>'autcomplete_name_analyzer'},
-          :name_sort    => { :type => 'string', :index=> :not_analyzed }
-        }
-      }
     }
   end
 
@@ -91,7 +98,8 @@ class Pool
         if all_rows
           all
         else
-          string query, {:default_field=>'name'}
+          # No default_field is specified to let search span all indexed fields
+          string query, {}
         end
       end
 

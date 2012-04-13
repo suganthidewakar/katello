@@ -31,6 +31,7 @@ class SubscriptionsController < ApplicationController
     }
   end
 
+  #TODO: param rules!
 
   def index
   end
@@ -175,7 +176,7 @@ class SubscriptionsController < ApplicationController
                       :ajax_load  => true,
                       :ajax_scroll => items_subscriptions_path(),
                       :actions => nil,
-                      :search_class => Product,
+                      :search_class => Pool,
                       :accessor => "cp_id"
                       }
   end

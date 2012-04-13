@@ -9,6 +9,11 @@
     .grid_10#subscription_info
       %fieldset
         .grid_2.ra.fieldset
+          =label :name, :name, _("Name")
+        .grid_8.la
+          = @subscription.productName
+      %fieldset
+        .grid_2.ra.fieldset
           =label :consumed, :consumed, _("Consumed")
         .grid_8.la
           - if @subscription.quantity < 0
@@ -17,12 +22,12 @@
             = _("%d of %d") % [@subscription.consumed, @subscription.quantity]
       %fieldset
         .grid_2.ra.fieldset
-          =label :date_range, :date_range, _("Begin / End")
+          =label :date_range, :date_range, _("Starts / Ends")
         .grid_8.la
           = _("%s / %s") % [format_time(@subscription.startDate), format_time(@subscription.endDate)]
       %fieldset
         .grid_2.ra.fieldset
-          =label :contract, :contract, _("Contract")
+          =label :contract, :contract, _("Contract Number")
         .grid_8.la
           = @subscription.contractNumber
       %fieldset
@@ -37,7 +42,7 @@
           = @subscription.arch
       %fieldset
         .grid_2.ra.fieldset
-          =label :systype, :systype, _("System Type")
+          =label :systype, :systype, _("Type")
         .grid_8.la
           = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
       - if !@subscription.source_pool_id.nil?
