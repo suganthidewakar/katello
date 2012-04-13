@@ -13,8 +13,9 @@ require 'ostruct'
 
 class SubscriptionsController < ApplicationController
 
-  before_filter :find_subscription, :except=>[:index, :items]
+  before_filter :find_subscription, :except=>[:index, :items, :new]
   before_filter :authorize
+  before_filter :find_provider
   before_filter :setup_options, :only=>[:index, :items]
 
   # two pane columns and mapping for sortable fields
@@ -27,11 +28,13 @@ class SubscriptionsController < ApplicationController
       :items => read_org,
       :show => lambda{true},
       :edit => lambda{true},
-      :products => lambda{true}
+      :products => lambda{true},
+      :new => lambda{true}   #TODO: fix
     }
   end
 
   #TODO: param rules!
+
 
   def index
   end
@@ -73,11 +76,16 @@ class SubscriptionsController < ApplicationController
   end
 
   def show
+    @provider = current_organization.redhat_provider
     render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :accessor=>"product_id", :columns => COLUMNS.keys, :noblock => 1}
   end
 
   def products
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
+  end
+
+  def new
+    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider}
   end
 
   def section_id
@@ -169,7 +177,8 @@ class SubscriptionsController < ApplicationController
                       :col => ["name"],
                       :titles => [_("Name")],
                       :custom_rows => true,
-                      :enable_create => false,
+                      :enable_create => @provider.editable?,
+                      :create_label => _("+ Import Manifest"),
                       :enable_sort => true,
                       :name => controller_display_name,
                       :list_partial => 'subscriptions/list_subscriptions',
@@ -184,5 +193,10 @@ class SubscriptionsController < ApplicationController
   def controller_display_name
     return 'subscription'
   end
+
+  def find_provider
+      @provider = current_organization.redhat_provider
+  end
+
 
 end
