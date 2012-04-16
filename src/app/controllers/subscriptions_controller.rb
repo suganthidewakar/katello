@@ -11,6 +11,20 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'ostruct'
 
+# TODO: subscriptions_controller rules
+# TODO: subscriptions_controller param_rules
+# TODO: limit search to organization
+# TODO: display all relevant fields in Details page
+# TODO: replace OpenStruct w/ Pool model
+# TODO: remove unneeded fields in json before indexing
+# TODO: activation keys broken
+# TODO: links to subscriptions, systems, activation keys
+# TODO: third tab "consumers" (?) to list referenced systems, activation keys, etc.
+# TODO: index provided products fields for better search
+# TODO: spinner while manifest importing
+# TODO: start / end dates in left subscriptions list
+# TODO: where / when to force update search index? (currently on call to 'items' w/o search)
+
 class SubscriptionsController < ApplicationController
 
   before_filter :find_subscription, :except=>[:index, :items, :new]
@@ -48,10 +62,6 @@ class SubscriptionsController < ApplicationController
     if search.nil?
       find_subscriptions
     else
-      # TODO: ???? temp
-      pools = Candlepin::Owner.pools current_organization.cp_key
-      Pool.index_pools pools
-
       @subscriptions = Pool.search(search, offset, current_user.page_size)
     end
 
