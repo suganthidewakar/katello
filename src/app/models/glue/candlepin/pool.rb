@@ -10,9 +10,70 @@
 # have received a copy of GPLv2 along with this software; if not, see
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
-require 'resources/candlepin'
+require_dependency 'resources/candlepin'
+require 'util/search'
 
 module Glue::Candlepin::Pool
+
+=begin
+  def self.find id
+    pool_json = Candlepin::Pool.find_as_json(id)
+    Glue::Candlepin::Pool.new(pool_json) if not pool_json.nil?
+  end
+
+  attr_accessor :name
+
+  def initialize(params = {})
+    params.each_pair {|k,v| instance_variable_set("@#{k}", v) unless v.nil? }
+  end
+
+  def self.name_search query, number=15
+    return [] if !Tire.index(self.index).exists?
+    start = 0
+
+    query = Katello::Search::filter_input query
+    query = "name_autocomplete:#{query}"
+
+    search = Tire.search self.index do
+      fields [:name]
+      query do
+        string query
+      end
+    end
+    to_ret = []
+    search.results.each{|pkg|
+       to_ret << pkg.name if !to_ret.include?(pkg.name)
+       break if to_ret.size == number
+    }
+    return to_ret
+  end
+
+  def self.search query, start, page_size, sort=[:name_sort, "ASC"]
+    return [] if !Tire.index(self.index).exists?
+
+    all_rows = query.blank? #if blank, get all rows
+
+    search = Tire.search self.index do
+      query do
+        if all_rows
+          all
+        else
+          string query, {:default_field=>'name'}
+        end
+      end
+
+      if page_size > 0
+       size page_size
+       from start
+      end
+
+      sort { by sort[0], sort[1] } unless !all_rows
+    end
+    return search.results
+  rescue
+    return []
+  end
+=end
 
   def self.included(base)
     base.send :include, LazyAccessor
@@ -49,16 +110,61 @@ module Glue::Candlepin::Pool
       if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
         @productName = attrs["productName"]
-        @startDate = attrs["startDate"]
-        @endDate = attrs["endDate"]
+        @startDate = Date.parse(attrs["startDate"])
+        @endDate = Date.parse(attrs["endDate"])
         @consumed = attrs["consumed"]
         @quantity = attrs["quantity"]
         @attrs = attrs["attributes"]
         @owner = attrs["owner"]
         @productId = attrs["productId"]
-        super(:cp_id => attrs['id'])
-      else
-        super
+        @cp_id = attrs['id']
+        @productId = attrs['productId']
+        @accountNumber = attrs['accountNumber']
+        @contractNumber = attrs['contractNumber']
+
+        @sourcePoolId = ""
+        @hostId = ""
+        @virtOnly = false
+        @poolDerived = false
+        attrs['attributes'].each do |attr|
+          if attr['name'] == 'source_pool_id'
+            @sourcePoolId = attr['value']
+          elsif attr['name'] == 'requires_host'
+            @hostId = attr['value']
+          elsif attr['name'] == 'virt_only'
+            @virtOnly = attr['value'] == 'true' ? true : false
+          elsif attr['name'] == 'pool_derived'
+            @poolDerived = attr['value'] == 'true' ? true : false
+          end
+        end
+
+        @virtLimit = 0
+        @supportType = ""
+        @arch = ""
+        @supportLevel = ""
+        @sockets = 0
+        @description = ""
+        @productFamily = ""
+        @variant = ""
+        attrs['productAttributes'].each do |attr|
+          if attr['name'] == 'virt_limit'
+            @virtLimit = attr['value'].to_i
+          elsif attr['name'] == 'support_type'
+            @supportType = attr['value']
+          elsif attr['name'] == 'arch'
+            @arch = attr['value']
+          elsif attr['name'] == 'support_level'
+            @supportLevel = attr['value']
+          elsif attr['name'] == 'sockets'
+            @sockets = attr['value'].to_i
+          elsif attr['name'] == 'description'
+            @description = attr['value']
+          elsif attr['name'] == 'product_family'
+            @productFamily = attr['value']
+          elsif attr['name'] == 'variant'
+            @variant = attr['value']
+          end
+        end
       end
     end
 

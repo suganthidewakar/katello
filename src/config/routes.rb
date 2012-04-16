@@ -49,7 +49,16 @@ Src::Application.routes.draw do
   match 'notices' => 'notices#show', :via => :get
   match 'notices' => 'notices#destroy_all', :via => :delete
 
-  resources :subscriptions, :only => [:index]
+  #resources :subscriptions, :only => [:index]
+  resources :subscriptions do
+    member do
+      get :edit
+      get :products
+    end
+    collection do
+      get :items
+    end
+  end
 
   resources :dashboard, :only => [:index] do
     collection do

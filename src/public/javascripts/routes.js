@@ -180,9 +180,9 @@
   products_filter_path: function(_id, options) {
   return Utils.build_path(2, ["/filters/", "/products"], arguments)
   },
-// system_events => /systems/:system_id/events(.:format)
-  system_events_path: function(_system_id, options) {
-  return Utils.build_path(2, ["/systems/", "/events"], arguments)
+// items_subscriptions => /subscriptions/items(.:format)
+  items_subscriptions_path: function(options) {
+  return Utils.build_path(0, ["/subscriptions/items"], ["format"], arguments)
   },
 // validate_api_template => /api/templates/:id/validate(.:format)
   validate_api_template_path: function(_id, options) {
