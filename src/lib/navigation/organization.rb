@@ -15,6 +15,7 @@ module Navigation
     def self.included(base)
       base.class_eval do
         helper_method :organization_navigation
+        helper_method :subscription_navigation
       end
     end
 
@@ -40,7 +41,7 @@ module Navigation
     def menu_org_subscriptions
       {:key => :subscriptions,
        :name => _("Subscriptions"),
-       :url => subscriptions_path(),
+       :url => subscriptions_path,
        :options => {:class=>'organizations second_level', "data-menu"=>"organizations"}
       }
     end
@@ -57,6 +58,23 @@ module Navigation
           :name =>_("History"),
           :url => lambda{events_organization_path(@organization.cp_key)},
           :if => lambda{@organization},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def subscription_navigation
+      [
+        { :key => :details,
+          :name =>_("Details"),
+          :url => lambda{edit_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"navigation_element"},
+        },
+        { :key => :products,
+          :name =>_("Products"),
+          :url => lambda{products_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
           :options => {:class=>"navigation_element"}
         }
       ]
