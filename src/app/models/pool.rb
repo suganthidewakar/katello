@@ -88,7 +88,7 @@ class Pool
     end if !pools.empty?
   end
 
-  def self.search query, start, page_size, sort=[:name_sort, "ASC"]
+  def self.search org_key, query, start, page_size, sort=[:name_sort, "ASC"]
     return [] if !Tire.index(self.index).exists?
 
     all_rows = query.blank? #if blank, get all rows
@@ -106,6 +106,10 @@ class Pool
       if page_size > 0
        size page_size
        from start
+      end
+
+      if org_key
+        filter :term, 'owner.key'=>org_key
       end
 
       sort { by sort[0], sort[1] } unless !all_rows

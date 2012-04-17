@@ -11,8 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 require 'ostruct'
 
-# TODO: subscriptions_controller rules
-# TODO: subscriptions_controller param_rules
+# TODO: subscriptions_controller rules - what roles to test?
+# DONE: subscriptions_controller param_rules
 # TODO: limit search to organization
 # TODO: display all relevant fields in Details page
 # TODO: replace OpenStruct w/ Pool model
@@ -27,9 +27,9 @@ require 'ostruct'
 
 class SubscriptionsController < ApplicationController
 
+  before_filter :find_provider
   before_filter :find_subscription, :except=>[:index, :items, :new]
   before_filter :authorize
-  before_filter :find_provider
   before_filter :setup_options, :only=>[:index, :items]
 
   # two pane columns and mapping for sortable fields
@@ -37,17 +37,22 @@ class SubscriptionsController < ApplicationController
 
   def rules
     read_org = lambda{current_organization && current_organization.readable?}
+    read_provider_test = lambda{@provider.readable?}
     {
       :index => read_org,
       :items => read_org,
       :show => lambda{true},
       :edit => lambda{true},
       :products => lambda{true},
-      :new => lambda{true}   #TODO: fix
+      :new => read_provider_test
     }
   end
 
-  #TODO: param rules!
+  def param_rules
+    {
+        # empty
+    }
+  end
 
 
   def index
@@ -62,7 +67,7 @@ class SubscriptionsController < ApplicationController
     if search.nil?
       find_subscriptions
     else
-      @subscriptions = Pool.search(search, offset, current_user.page_size)
+      @subscriptions = Pool.search(current_organization.cp_key, search, offset, current_user.page_size)
     end
 
     if offset
