@@ -1,6 +1,6 @@
 %div
   %div{:class=>'column_1'}
-    .status_icon{:class => "#{item.sourceEntitlement ? 'yellow' : 'green'}"}
+    .status_icon{:class => "#{item.poolDerived ? 'yellow' : 'green'}"}
     %div.one-line-ellipsis{:style=>"padding-top: 2px; font-weight: bold;"}
       = item.productName
 %div
@@ -10,5 +10,5 @@
     - else
       = _("Consumed: %d of %d") % [item.consumed, item.quantity]
   %div{:class=>'column_2'}
-    = _("SLA: %s") % item.support_level
+    = _("SLA: %s") % item.supportLevel
 .arrow-right

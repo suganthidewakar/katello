@@ -81,6 +81,7 @@ module Glue::Candlepin::Pool
     base.send :extend, ClassMethods
 
     base.class_eval do
+=begin
       lazy_accessor :productName, :productId, :startDate, :endDate, :consumed, :quantity, :attrs, :owner,
         :initializer => lambda {
           json = Candlepin::Pool.find(cp_id)
@@ -92,6 +93,7 @@ module Glue::Candlepin::Pool
       alias_method :poolName, :productName
       alias_method :expires, :endDate
       alias_method :expires_as_datetime, :endDate_as_datetime
+=end
     end
   end
 
@@ -106,6 +108,12 @@ module Glue::Candlepin::Pool
 
   module InstanceMethods
 
+    attr_accessor :cp_id, :poolDerived, :productName, :consumed, :quantity, :supportLevel, :supportType
+    attr_accessor :startDate, :endDate, :attrs, :owner, :productId, :accountNumber, :contractNumber
+    attr_accessor :sourcePoolId, :hostId, :virtOnly, :virtLimit
+    attr_accessor :arch, :sockets, :description, :productFamily, :variant
+    attr_accessor :providedProducts
+
     def initialize(attrs = nil)
       if not attrs.nil? and attrs.member? 'id'
         # initializing from candlepin json
@@ -118,12 +126,12 @@ module Glue::Candlepin::Pool
         @owner = attrs["owner"]
         @productId = attrs["productId"]
         @cp_id = attrs['id']
-        @productId = attrs['productId']
         @accountNumber = attrs['accountNumber']
         @contractNumber = attrs['contractNumber']
+        @providedProducts = attrs['providedProducts']
 
-        @sourcePoolId = ""
-        @hostId = ""
+        @sourcePoolId = nil
+        @hostId = nil
         @virtOnly = false
         @poolDerived = false
         attrs['attributes'].each do |attr|
@@ -168,6 +176,7 @@ module Glue::Candlepin::Pool
       end
     end
 
+=begin
     def startDate_as_datetime
       DateTime.parse(startDate)
     end
@@ -175,6 +184,7 @@ module Glue::Candlepin::Pool
     def endDate_as_datetime
       DateTime.parse(endDate)
     end
+=end
 
     def organization
       Organization.find_by_name(owner["key"])
