@@ -72,20 +72,24 @@ class Pool
     "#{AppConfig.elastic_index}_pool"
   end
 
-  def self.find cp_id
-    pool_json = Candlepin::Pool.find(cp_id)
+  def self.find(cp_id, pool_json=nil)
+    pool_json = Candlepin::Pool.find(cp_id) if !pool_json
     Pool.new(pool_json) if not pool_json.nil?
   end
 
   def self.index_pools cp_pools
-    pools = cp_pools.collect{ |cp_pool|
-      pool = self.find(cp_pool['id'])
+    pools = []
+    json_pools = cp_pools.collect{ |cp_pool|
+      pool = self.find(cp_pool['id'], cp_pool)
+      pools << pool
       pool.as_json.merge(pool.index_options)
     }
     Tire.index Pool.index do
       create :settings => Pool.index_settings, :mappings => Pool.index_mapping
-      import pools
-    end if !pools.empty?
+      import json_pools
+    end if !json_pools.empty?
+
+    pools
   end
 
   def self.search org_key, query, start, page_size, sort=[:name_sort, "ASC"]

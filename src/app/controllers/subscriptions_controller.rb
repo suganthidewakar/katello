@@ -15,7 +15,7 @@ require 'ostruct'
 # DONE: subscriptions_controller param_rules
 # DONE: limit search to organization
 # TODO: display all relevant fields in Details page
-# TODO: replace OpenStruct w/ Pool model
+# DONE: replace OpenStruct w/ Pool model
 # TODO: remove unneeded fields in json before indexing
 # TODO: activation keys broken
 # TODO: links to subscriptions, systems, activation keys
@@ -63,29 +63,27 @@ class SubscriptionsController < ApplicationController
   def items
     order = split_order(params[:order])
     search = params[:search]
-    offset = params[:offset]
+    offset = params[:offset] || "0"
     filters = {}
 
+    # Without any search terms, all subscriptions for an org are queried directly from candlepin instead of
+    # hitting elastic search. This is important since this is then only time subscriptions get reindexed
+    # currently.
     if search.nil?
       find_subscriptions
     else
       @subscriptions = Pool.search(current_organization.cp_key, search, offset, current_user.page_size)
     end
 
-    if offset
+    if offset != "0"
       render :text => "" and return if @subscriptions.empty?
 
-      #options = {:list_partial => 'subscriptions/list_subscriptions', :accessor => "product_id", :name => controller_display_name}
       render_panel_items(@subscriptions, @panel_options, nil, offset)
     else
       @subscriptions = @subscriptions[0..current_user.page_size]
 
-      #options = {:list_partial => 'subscriptions/list_subscriptions', :accessor => "product_id", :name => controller_display_name}
       render_panel_items(@subscriptions, @panel_options, nil, offset)
     end
-
-    #render_panel_direct(Product, @panel_options, search, params[:offset], order,
-    #                    {:filter=>filters, :load=>true})
   end
 
   def edit
@@ -94,7 +92,7 @@ class SubscriptionsController < ApplicationController
 
   def show
     @provider = current_organization.redhat_provider
-    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :accessor=>"product_id", :columns => COLUMNS.keys, :noblock => 1}
+    render :partial=>"subscriptions/list_subscription_show", :locals=>{:item=>@subscription, :columns => COLUMNS.keys, :noblock => 1}
   end
 
   def products
@@ -120,73 +118,14 @@ class SubscriptionsController < ApplicationController
   end
 
   def find_subscription
-    cp_pool = Candlepin::Pool.find(params[:id])
-    cp_product = Candlepin::Product.get(cp_pool['productId']).first
-    @subscription = populate_subscription(cp_pool, cp_product)
+    @subscription = Pool.find(params[:id])
   end
 
   def find_subscriptions
-    pools = Candlepin::Owner.pools current_organization.cp_key
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
 
     # Update elastic-search
-    Pool.index_pools pools
-
-    @subscriptions = []
-
-    # Cache products to avoid duplicating calls to candlepin
-    products = {}
-
-    pools.each do |pool|
-      # Bonus pools have their sourceEntitlement set
-      # TODO: Does the count of the parent pool get its quantity updated?
-      #next if pool['sourceEntitlement'] != nil
-
-      product = products[pool['productId']]
-      if !product
-        product = Candlepin::Product.get(pool['productId']).first
-        products[pool['productId']] = product
-      end
-      @subscriptions << populate_subscription(pool, product)
-    end
-
-    @subscriptions
-  end
-
-  # Package up subscription details for consumption by view layer
-  def populate_subscription(cp_pool, cp_product)
-
-    subscription = OpenStruct.new cp_pool
-    #subscription.consumed_stats = converted_stats
-    subscription.cp_id = cp_pool['id']
-    subscription.product = cp_product
-    subscription.startDate = Date.parse(subscription.startDate)
-    subscription.endDate = Date.parse(subscription.endDate)
-
-    # Other interesting attributes for easier access
-    subscription.virt_only = false
-    subscription.support_level = 'None'
-    subscription.requires_host_id = nil
-    subscription.source_pool_id = nil
-    cp_pool['attributes'].each do |attr|
-      if attr['name'] == 'virt_only' && attr['value'] == 'true'
-        subscription.virt_only = true
-      elsif attr['name'] == 'requires_host'
-        subscription.requires_host_id = attr['value']
-      elsif attr['name'] == 'source_pool_id'
-        subscription.source_pool_id = attr['value']
-      end
-    end
-    cp_product['attributes'].each do |attr|
-      if attr['name'] == 'virt_only' && attr['value'] == 'true'
-          subscription.virt_only = true
-      elsif attr['name'] == 'support_level'
-        subscription.support_level = attr['value']
-      elsif attr['name'] == 'arch'
-        subscription.arch = attr['value']
-      end
-    end
-
-    subscription
+    @subscriptions = Pool.index_pools cp_pools
   end
 
   def setup_options
@@ -202,8 +141,7 @@ class SubscriptionsController < ApplicationController
                       :ajax_load  => true,
                       :ajax_scroll => items_subscriptions_path(),
                       :actions => nil,
-                      :search_class => Pool,
-                      :accessor => "cp_id"
+                      :search_class => Pool
                       }
   end
 

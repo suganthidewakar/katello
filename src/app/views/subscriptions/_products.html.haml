@@ -1,4 +1,4 @@
-= javascript :edit_helpers
+-#= javascript :edit_helpers
 = include_javascripts :treetable
 = render :partial=>"subscriptions_tupane_header_nav"
 
@@ -40,7 +40,7 @@
                       = productContent['enabled']
 
 = javascript do
-  :javascript
+  :plain
     $(document).ready(function() {
       $("#products_table").treeTable({
         expandable: true,

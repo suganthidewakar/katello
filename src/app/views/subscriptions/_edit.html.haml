@@ -32,9 +32,9 @@
           = @subscription.contractNumber
       %fieldset
         .grid_2.ra.fieldset
-          =label :support_level, :support_level, _("Support Level")
+          =label :supportLevel, :supportLevel, _("Support Level")
         .grid_8.la
-          = @subscription.support_level
+          = @subscription.supportLevel
       %fieldset
         .grid_2.ra.fieldset
           =label :arch, :arch, _("Arch")
@@ -44,19 +44,19 @@
         .grid_2.ra.fieldset
           =label :systype, :systype, _("Type")
         .grid_8.la
-          = @subscription.virt_only ? _("Virtual Only") : _("Physical or Virtual")
-      - if !@subscription.source_pool_id.nil?
+          = @subscription.virtOnly ? _("Virtual Only") : _("Physical or Virtual")
+      - if !@subscription.sourcePoolId.nil?
         %fieldset
           .grid_2.ra.fieldset
             =label :sourcepool, :sourcepool, _("Bonus From")
           .grid_8.la
-            = subscriptions_pool_link_helper(@subscription.source_pool_id)
-      - if !@subscription.requires_host_id.nil?
+            = subscriptions_pool_link_helper(@subscription.sourcePoolId)
+      - if !@subscription.hostId.nil?
         %fieldset
           .grid_2.ra.fieldset
             =label :host, :host, _("Required Host")
           .grid_8.la
-            = @subscription.requires_host_id
+            = @subscription.hostId
     - if @subscription.providedProducts.length > 0
       .clear
       .grid_10
