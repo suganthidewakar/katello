@@ -14,7 +14,7 @@ require 'ostruct'
 # TODO: subscriptions_controller rules - what roles to test?
 # DONE: subscriptions_controller param_rules
 # DONE: limit search to organization
-# TODO: display all relevant fields in Details page
+# DONE: display all relevant fields in Details page
 # DONE: replace OpenStruct w/ Pool model
 # TODO: remove unneeded fields in json before indexing
 # TODO: activation keys broken
@@ -26,6 +26,7 @@ require 'ostruct'
 # TODO: where / when to force update search index? (currently on call to 'items' w/o search)
 # TODO: infinite scroll search not showing correct totals (working at all?)
 # TODO: prepend 'repo url' to products' Content Download URL on Products tab
+#       Does this make sense? The URL has $releasever and $basearch in it
 
 class SubscriptionsController < ApplicationController
 

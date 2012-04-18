@@ -14,6 +14,11 @@
           = @subscription.productName
       %fieldset
         .grid_2.ra.fieldset
+          =label :name, :name, _("Description")
+        .grid_8.la
+          = @subscription.description
+      %fieldset
+        .grid_2.ra.fieldset
           =label :consumed, :consumed, _("Consumed")
         .grid_8.la
           - if @subscription.quantity < 0
@@ -32,9 +37,19 @@
           = @subscription.contractNumber
       %fieldset
         .grid_2.ra.fieldset
+          =label :account, :account, _("Account Number")
+        .grid_8.la
+          = @subscription.accountNumber
+      %fieldset
+        .grid_2.ra.fieldset
           =label :supportLevel, :supportLevel, _("Support Level")
         .grid_8.la
           = @subscription.supportLevel
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :supporttype, :supporttype, _("Support Type")
+        .grid_8.la
+          = @subscription.supportType
       %fieldset
         .grid_2.ra.fieldset
           =label :arch, :arch, _("Arch")
@@ -45,6 +60,11 @@
           =label :systype, :systype, _("Type")
         .grid_8.la
           = @subscription.virtOnly ? _("Virtual Only") : _("Physical or Virtual")
+      %fieldset
+        .grid_2.ra.fieldset
+          =label :sockets, :sockets, _("Sockets")
+        .grid_8.la
+          = @subscription.sockets
       - if !@subscription.sourcePoolId.nil?
         %fieldset
           .grid_2.ra.fieldset
