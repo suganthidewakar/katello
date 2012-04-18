@@ -23,15 +23,15 @@
                     %li
                       %hr{:width=>"75%"}
                     %li
+                      = _('Content Download URL: ')
+                      = productContent['content']['contentUrl']
+                    %li
                       = _('GPG Key URL: ')
                       - productContent['content']['gpgUrl'].split(',').each do |link|
                         - if link == 'http://'
                           = _("None")
                         - else
                           = link
-                    %li
-                      = _('Content Download URL: ')
-                      = productContent['content']['contentUrl']
                     %li
                       = _('Repo Type: ')
                       = productContent['content']['type']
