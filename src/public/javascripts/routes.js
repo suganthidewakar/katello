@@ -184,6 +184,10 @@
   items_subscriptions_path: function(options) {
   return Utils.build_path(0, ["/subscriptions/items"], ["format"], arguments)
   },
+// update_subscriptions => /subscriptions/update(.:format)
+  upload_subscriptions_path: function(options) {
+  return Utils.build_path(0, ["/subscriptions/upload"], ["format"], arguments)
+  },
 // validate_api_template => /api/templates/:id/validate(.:format)
   validate_api_template_path: function(_id, options) {
   return Utils.build_path(2, ["/api/templates/", "/validate"], arguments)

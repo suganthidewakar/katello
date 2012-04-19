@@ -114,10 +114,8 @@ class ProvidersController < ApplicationController
   end
 
   def redhat_provider
-    # We default to none imported until we can properly poll Candlepin for status of the import
-    @grouped_subscriptions = []
     begin
-      setup_subs
+      find_subscriptions
     rescue Exception => error
       display_message = parse_display_message(error.response)
       error_text = _("Unable to retrieve subscription manifest for provider '%{name}." % {:name => @provider.name})
@@ -274,6 +272,29 @@ class ProvidersController < ApplicationController
 
   def search_filter
     @filter = {:organization_id => current_organization}
+  end
+
+  def find_subscriptions
+    @provider = current_organization.redhat_provider
+    cp_pools = Candlepin::Owner.pools current_organization.cp_key
+    subscriptions = Pool.index_pools cp_pools
+
+    @grouped_subscriptions = subscriptions.collect { |sub|
+      # Derived pools are not displayed here
+      if sub.poolDerived
+        next
+      end
+
+      #sub.providedProcucts.each { |prod|
+      #  if prod['provider'] != @provider
+      #    next
+      #  end
+      #}
+
+      sub
+    }
+
+    @grouped_subscriptions
   end
 
   def setup_subs

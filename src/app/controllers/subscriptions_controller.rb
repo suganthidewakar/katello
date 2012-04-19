@@ -23,10 +23,9 @@ require 'ostruct'
 # TODO: index provided products fields for better search
 # TODO: spinner while manifest importing
 # TODO: start / end dates in left subscriptions list
-# TODO: where / when to force update search index? (currently on call to 'items' w/o search)
+# DONE: where / when to force update search index? (currently on call to 'items' w/o search) <- leaving there
 # TODO: infinite scroll search not showing correct totals (working at all?)
-# TODO: prepend 'repo url' to products' Content Download URL on Products tab
-#       Does this make sense? The URL has $releasever and $basearch in it
+# TODO: prepend 'repo url' to products' Content Download URL on Products tab <- Does this make sense? The URL has $releasever and $basearch in it
 
 class SubscriptionsController < ApplicationController
 
@@ -41,13 +40,15 @@ class SubscriptionsController < ApplicationController
   def rules
     read_org = lambda{current_organization && current_organization.readable?}
     read_provider_test = lambda{@provider.readable?}
+    edit_provider_test = lambda{@provider.editable?}
     {
       :index => read_org,
       :items => read_org,
       :show => lambda{true},
       :edit => lambda{true},
       :products => lambda{true},
-      :new => read_provider_test
+      :new => read_provider_test,
+      :upload => edit_provider_test
     }
   end
 
@@ -102,6 +103,57 @@ class SubscriptionsController < ApplicationController
 
   def new
     render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider}
+  end
+
+
+  def upload
+    if !params[:provider].blank? and params[:provider].has_key? :contents
+      temp_file = nil
+      begin
+        dir = "#{Rails.root}/tmp"
+        Dir.mkdir(dir) unless File.directory? dir
+        temp_file = File.new(File.join(dir, "import_#{SecureRandom.hex(10)}.zip"), 'w+', 0600)
+        temp_file.write params[:provider][:contents].read
+        temp_file.close
+        # force must be a string value
+        force_update = params[:force_import] == "1" ? "true" : "false"
+        @provider.import_manifest(File.expand_path(temp_file.path), { :force => force_update })
+        if AppConfig.katello?
+          notice _("Subscription manifest uploaded successfully for provider '%{name}'. Please enable the repositories you want to sync by selecting 'Enable Repositories' and selecting individual repositories to be enabled." % {:name => @provider.name}), {:synchronous_request => false}
+        else
+          notice _("Subscription manifest uploaded successfully for provider '%{name}'." % {:name => @provider.name}), {:synchronous_request => false}
+        end
+
+      rescue Exception => error
+        if error.respond_to?(:response)
+          display_message = parse_display_message(error.response)
+        elsif error.message
+          display_message = error.message
+        else
+          display_message = ""
+        end
+
+        error_text = _("Subscription manifest upload for provider '%{name}' failed." % {:name => @provider.name})
+        error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+
+        # In some cases, force_update will allow the manifest to be uploaded when it normally would not
+        if force_update == "false"
+          error_text += _("%{newline}If you are uploading an older manifest, you can use the Force checkbox to overwrite existing data." % { :newline => "<br />"})
+        end
+
+        notice error_text, {:level => :error, :details => pp_exception(error)}
+
+        Rails.logger.error "error uploading subscriptions."
+        Rails.logger.error error
+        Rails.logger.error error.backtrace.join("\n")
+        # Fall-through even on error so that the import history is refreshed
+      end
+      items
+    else
+      # user didn't provide a manifest to upload
+      notice _("Subscription manifest must be specified on upload."), {:level => :error}
+      render :nothing => true
+    end
   end
 
   def section_id
