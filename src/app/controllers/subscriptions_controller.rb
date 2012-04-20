@@ -26,11 +26,13 @@ require 'ostruct'
 # DONE: where / when to force update search index? (currently on call to 'items' w/o search) <- leaving there
 # TODO: infinite scroll search not showing correct totals (working at all?)
 # TODO: prepend 'repo url' to products' Content Download URL on Products tab <- Does this make sense? The URL has $releasever and $basearch in it
+# TODO: limit subscriptions to red hat provider
+# TODO: add a 'Repositories' tab in addition to/replace of 'Products'? Could show/edit enabled
 
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new]
+  before_filter :find_subscription, :except=>[:index, :items, :new, :upload]
   before_filter :authorize
   before_filter :setup_options, :only=>[:index, :items]
 
@@ -194,7 +196,8 @@ class SubscriptionsController < ApplicationController
                       :ajax_load  => true,
                       :ajax_scroll => items_subscriptions_path(),
                       :actions => nil,
-                      :search_class => Pool
+                      :search_class => Pool,
+                      :accessor => 'unused'
                       }
   end
 

@@ -279,19 +279,23 @@ class ProvidersController < ApplicationController
     cp_pools = Candlepin::Owner.pools current_organization.cp_key
     subscriptions = Pool.index_pools cp_pools
 
-    @grouped_subscriptions = subscriptions.collect { |sub|
+    @grouped_subscriptions = []
+    subscriptions.each { |sub|
       # Derived pools are not displayed here
       if sub.poolDerived
         next
       end
 
-      #sub.providedProcucts.each { |prod|
-      #  if prod['provider'] != @provider
-      #    next
+      # Only Red Hat provider subscriptions are shown
+      p = Product.where(:cp_id => sub.productId).first
+      if p && p.provider_id == @provider.id
+        @grouped_subscriptions << sub
+      end
+      #Product.where(:cp_id => sub.productId).each { |product|
+      #  if product && product.provider_id == @provider.id
+      #    @grouped_subscriptions << sub
       #  end
       #}
-
-      sub
     }
 
     @grouped_subscriptions
