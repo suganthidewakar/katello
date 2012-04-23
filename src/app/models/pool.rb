@@ -25,13 +25,15 @@ class Pool
       "_type"     => :pool,
       "id"        => @cp_id,
       "name"      => @productName,
+      "name_sort" => @productName,
       "start"     => @startDate,
       "end"       => @endDate,
       "product"   => @productId,
       "account"   => @accountNumber,
       "contract"  => @contractNumber,
       "sla"       => @supportLevel,
-      "virtual"   => @virtOnly
+      "virtual"   => @virtOnly,
+      "org"       => @owner["key"]
     }
   end
 
@@ -45,7 +47,8 @@ class Pool
           :begin        => {:type=>'date'},
           :end          => {:type=>'date'},
           :sockets      => {:type=>'long'},
-          :sla          => {:type=>'string'}
+          :sla          => {:type=>'string'},
+          :org          => {:type=>'string', :index=>:not_analyzed}
         }
       }
     }
@@ -62,7 +65,8 @@ class Pool
                         "min_gram"  => 1,
                         "max_gram"  => 30
                     }
-                }.merge(Katello::Search::custom_analzyers)
+                },
+                "analyzer" => Katello::Search::custom_analzyers
             }
         }
     }
@@ -113,7 +117,7 @@ class Pool
       end
 
       if org_key
-        filter :term, 'owner.key'=>org_key
+        filter :term, 'org'=>org_key
       end
 
       sort { by sort[0], sort[1] } unless !all_rows

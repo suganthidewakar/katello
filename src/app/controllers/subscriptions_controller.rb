@@ -28,6 +28,7 @@ require 'ostruct'
 # TODO: prepend 'repo url' to products' Content Download URL on Products tab <- Does this make sense? The URL has $releasever and $basearch in it
 # TODO: limit subscriptions to red hat provider
 # TODO: add a 'Repositories' tab in addition to/replace of 'Products'? Could show/edit enabled
+# TODO: add name sorting in left list (how? using name_sort elastic search field?)
 
 class SubscriptionsController < ApplicationController
 
