@@ -14,7 +14,7 @@ module SubscriptionsHelper
 
   def subscriptions_pool_link_helper pool_id
     pool = Pool.find(pool_id)
-    link_to pool['productName'], root_path + "subscriptions#panel=subscription_" + pool_id
+    link_to pool.productName, root_path + "subscriptions#panel=subscription_" + pool_id
   end
 
   def subscriptions_product_helper product_id
