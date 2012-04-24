@@ -29,6 +29,7 @@ require 'ostruct'
 # TODO: limit subscriptions to red hat provider
 # TODO: add a 'Repositories' tab in addition to/replace of 'Products'? Could show/edit enabled
 # TODO: add name sorting in left list (how? using name_sort elastic search field?)
+# TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 
 class SubscriptionsController < ApplicationController
 
