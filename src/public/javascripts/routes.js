@@ -332,6 +332,10 @@
   items_subscriptions_path: function(options) {
   return Utils.build_path(0, ["/subscriptions/items"], ["format"], arguments)
   },
+// items_subscriptions => /subscriptions/items(.:format)
+  items_subscriptions_path: function(options) {
+  return Utils.build_path(0, ["/subscriptions/items"], ["format"], arguments)
+  },
 // items_gpg_keys => /gpg_keys/items(.:format)
   items_gpg_keys_path: function(options) {
   return Utils.build_path(1, ["/gpg_keys/items"], arguments)
