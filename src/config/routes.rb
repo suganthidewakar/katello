@@ -53,6 +53,8 @@ Src::Application.routes.draw do
     member do
       get :edit
       get :products
+      get :consumers
+      get :history
     end
     collection do
       get :items

@@ -51,6 +51,8 @@ class SubscriptionsController < ApplicationController
       :show => lambda{true},
       :edit => lambda{true},
       :products => lambda{true},
+      :consumers => lambda{true},
+      :history => lambda{true},
       :new => read_provider_test,
       :upload => edit_provider_test
     }
@@ -105,8 +107,16 @@ class SubscriptionsController < ApplicationController
     render :partial=>"products", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
   end
 
+  def consumers
+    render :partial=>"consumers", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
+  end
+
   def new
-    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider}
+    render :partial=>"new", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name}
+  end
+
+  def history
+    render :partial=>"history", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name}
   end
 
 

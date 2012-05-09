@@ -16,6 +16,7 @@ module Navigation
       base.class_eval do
         helper_method :organization_navigation
         helper_method :subscription_navigation
+        helper_method :new_subscription_navigation
       end
     end
 
@@ -75,6 +76,29 @@ module Navigation
           :name =>_("Products"),
           :url => lambda{products_subscription_path(@subscription.cp_id)},
           :if => lambda{@subscription},
+          :options => {:class=>"navigation_element"}
+        },
+        { :key => :consumers,
+          :name =>_("Consumers"),
+          :url => lambda{consumers_subscription_path(@subscription.cp_id)},
+          :if => lambda{@subscription},
+          :options => {:class=>"navigation_element"}
+        }
+      ]
+    end
+
+    def new_subscription_navigation
+      [
+        { :key => :upload,
+          :name =>_("Import"),
+          :url => lambda{new_subscription_path()},
+          :if => lambda{true},
+          :options => {:class=>"navigation_element"},
+        },
+        { :key => :history,
+          :name =>_("History"),
+          :url => lambda{history_subscription_path()},
+          :if => lambda{true},
           :options => {:class=>"navigation_element"}
         }
       ]
