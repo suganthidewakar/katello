@@ -1,0 +1,15 @@
+= javascript :edit_helpers, :provider_redhat
+
+= content_for :title do
+  #{_("Subscription Manifest")}
+
+= render :partial=>"subscriptions_tupane_header_new_nav"
+
+= content_for :content do
+  #subscription
+    .grid_10
+      = help_tip_button('subscriptions-help')
+      = help_tip(_("Listed below are the subscriptions information." + |
+                 " If you have a subscription manifest you may upload it below. " + |
+                 "This manifest may be obtained by visiting the Red Hat Customer Portal or by contacting your support representative."), 'subscriptions-help') |
+

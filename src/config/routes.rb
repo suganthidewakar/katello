@@ -54,11 +54,11 @@ Src::Application.routes.draw do
       get :edit
       get :products
       get :consumers
-      get :history
     end
     collection do
       get :items
       post :upload
+      get :history
     end
   end
 

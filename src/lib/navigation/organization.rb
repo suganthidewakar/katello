@@ -97,7 +97,7 @@ module Navigation
         },
         { :key => :history,
           :name =>_("History"),
-          :url => lambda{history_subscription_path()},
+          :url => lambda{history_subscriptions_path()},
           :if => lambda{true},
           :options => {:class=>"navigation_element"}
         }

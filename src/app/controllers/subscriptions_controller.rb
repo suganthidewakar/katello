@@ -34,7 +34,7 @@ require 'ostruct'
 class SubscriptionsController < ApplicationController
 
   before_filter :find_provider
-  before_filter :find_subscription, :except=>[:index, :items, :new, :upload]
+  before_filter :find_subscription, :except=>[:index, :items, :new, :upload, :history]
   before_filter :authorize
   before_filter :setup_options, :only=>[:index, :items]
 
