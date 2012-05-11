@@ -14,7 +14,7 @@ module SubscriptionsHelper
 
   def subscriptions_pool_link_helper pool_id
     pool = Pool.find(pool_id)
-    link_to pool.productName, root_path + "subscriptions#panel=subscription_" + pool_id
+    link_to pool.productName, root_path + "subscriptions#panel=subscription_#{pool_id}"
   end
 
   def subscriptions_product_helper product_id
@@ -24,4 +24,8 @@ module SubscriptionsHelper
     product
   end
 
+  def subscriptions_system_link_helper host_id
+    system = System.first(:conditions => { :uuid => host_id })
+    link_to system.name, root_path + "systems#panel=system_#{system.id}"
+  end
 end

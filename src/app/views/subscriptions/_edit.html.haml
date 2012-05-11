@@ -76,7 +76,7 @@
           .grid_2.ra.fieldset
             =label :host, :host, _("Required Host")
           .grid_8.la
-            = @subscription.hostId
+            = subscriptions_system_link_helper @subscription.hostId
     - if @subscription.providedProducts.length > 0
       .clear
       .grid_10
