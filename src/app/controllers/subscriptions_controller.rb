@@ -116,7 +116,23 @@ class SubscriptionsController < ApplicationController
   end
 
   def history
-    render :partial=>"history", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name}
+
+    begin
+      @statuses = @provider.owner_imports
+    rescue Exception => error
+      @statuses = []
+      display_message = parse_display_message(error.response)
+      error_text = _("Unable to retrieve subscription history for provider '%{name}." % {:name => @provider.name})
+      error_text += _("%{newline}Reason: %{reason}" % {:reason => display_message, :newline => "<br />"}) unless display_message.blank?
+      notice error_text, {:level => :error, :synchronous_request => false}
+      Rails.logger.error "Error fetching subscription history from Candlepin"
+      Rails.logger.error error
+      Rails.logger.error error.backtrace.join("\n")
+      render :partial=>"history", :layout =>"tupane_layout", :status => :bad_request, :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
+      return
+    end
+
+    render :partial=>"history", :layout =>"tupane_layout", :locals=>{:provider=>@provider, :name => controller_display_name, :statuses=>@statuses}
   end
 
 
