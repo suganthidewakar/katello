@@ -28,4 +28,8 @@ module SubscriptionsHelper
     system = System.first(:conditions => { :uuid => host_id })
     link_to system.name, root_path + "systems#panel=system_#{system.id}"
   end
+
+  def subscriptions_activation_key_link_helper key
+    link_to key.name, root_path + "activation_keys#panel=activation_key_#{key.id}"
+  end
 end

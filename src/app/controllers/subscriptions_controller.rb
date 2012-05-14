@@ -30,6 +30,7 @@ require 'ostruct'
 # TODO: add a 'Repositories' tab in addition to/replace of 'Products'? Could show/edit enabled
 # TODO: add name sorting in left list (how? using name_sort elastic search field?)
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
+# TODO: in 'consumers' fence by roles what systems and activation keys are visible
 
 class SubscriptionsController < ApplicationController
 
@@ -108,7 +109,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def consumers
-    render :partial=>"consumers", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :editable => false, :name => controller_display_name}
+    systems = current_organization.systems
+    systems = systems.all_by_pool(@subscription.cp_id)
+
+    activation_keys = ActivationKey.joins(:pools).where('pools.cp_id'=>@subscription.cp_id)
+
+    render :partial=>"consumers", :layout => "tupane_layout", :locals=>{:subscription=>@subscription, :systems=>systems, :activation_keys=>activation_keys, :editable => false, :name => controller_display_name}
   end
 
   def new
