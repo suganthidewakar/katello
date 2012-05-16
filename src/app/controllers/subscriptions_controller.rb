@@ -31,6 +31,7 @@ require 'ostruct'
 # TODO: add name sorting in left list (how? using name_sort elastic search field?)
 # TODO: start date range not working?  start:2012-01-31 fails but start:"2012-01-31" works
 # TODO: in 'consumers' fence by roles what systems and activation keys are visible
+# TODO: spinner while importing manifest
 
 class SubscriptionsController < ApplicationController
 
