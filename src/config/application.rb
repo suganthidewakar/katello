@@ -124,6 +124,11 @@ module Src
 
     # if paranoia is set to true even children of Exception will be rescued
     config.exception_paranoia = false
+
+    # added to handle new asset pipeline
+    config.assets.enabled = true
+    config.assets.version = '1.0'
+    config.assets.prefix  = '/assets-files'
   end
 end
 
