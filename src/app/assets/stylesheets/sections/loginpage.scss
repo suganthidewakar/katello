@@ -11,6 +11,10 @@ $switcherformwidth: 300px;
 @import "widgets/scrollpane";
 @import "katello_base";
 
+@import "jquery.jnotify";
+@import 'jquery.jscrollpane';
+@import 'jquery.tipsy';
+
 //interstitial container
 #interstitial {
   left: 360px;

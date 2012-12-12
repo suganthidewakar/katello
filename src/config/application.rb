@@ -6,6 +6,7 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require "rails/test_unit/railtie"
+require "sprockets/railtie"
 File.expand_path("../../lib/util/boot_util.rb", __FILE__)
 
 # If you have a Gemfile, require the gems listed there, including any gems
@@ -29,11 +30,11 @@ else
     basic_groups = [:default, (:foreman if Katello::BootUtil.katello?)]
     groups = case Rails.env.to_sym
              when :build
-               basic_groups + [:development, :build]
+               basic_groups + [:development, :build, :assets]
              when :production
                basic_groups
              when :development
-               basic_groups + [:development, :debugging, :build, :development_boost]
+               basic_groups + [:development, :debugging, :build, :development_boost, :assets]
              when :test
                basic_groups + [:development, :test, (:debugging if ENV['TRAVIS'] != 'true')]
              else
@@ -129,6 +130,7 @@ module Src
     config.assets.enabled = true
     config.assets.version = '1.0'
     config.assets.prefix  = '/assets-files'
+    config.sass.load_paths << File.expand_path('../vendor/assets/stylesheets/')
   end
 end
 

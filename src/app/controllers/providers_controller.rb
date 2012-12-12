@@ -105,7 +105,7 @@ class ProvidersController < ApplicationController
 
   def new
     @provider = Provider.new
-    render :partial => "new", :layout => "tupane_layout", :locals => {:provider => @provider}
+    render :partial => "new", :locals => {:provider => @provider}
   end
 
   def create
