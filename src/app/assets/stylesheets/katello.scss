@@ -17,7 +17,17 @@
 @import "widgets/slidingtree";
 @import "widgets/scrollpane";
 @import "widgets/env_select";
+@import "widgets/fancyqueries";
+@import "widgets/tipsy_custom";
+@import "widgets/path_selector";
 @import "katello_sprites";
+
+@import "jquery-ui-1.8.11.custom.css";
+@import "jquery.loadmask.css";
+@import "jquery.jnotify.css";
+@import "jquery.treeTable.css";
+@import "jquery.jscrollpane.css";
+@import "jquery.tipsy.css";
 
 pre  { text-indent: 18px; }
 a { outline: 0 none;}

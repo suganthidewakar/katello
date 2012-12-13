@@ -1,4 +1,9 @@
 @import "katello_base";
+@import "../jquery.multiselect.css";
+@import "../jquery.multiselect.filter.css";
+@import "../jquery.timepickr.css";
+@import "jquery.timepickr.css";
+@import "tabs.css";
 
 $container_width: ($static_width/2) - 36;
 
