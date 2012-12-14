@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   include Profiling
   clear_helpers
 
-  helper "alchemy/translation"
+  helper Alchemy::TranslationHelper
   helper_method :current_organization
   before_filter :set_locale
   before_filter :require_user,:require_org
