@@ -11,7 +11,7 @@
 = content_for(:head) do
   = csrf_meta_tag
   / [if lt IE 9]
-    = include_javascripts  :html5
+    = javascript_include_tag 'html5'
   / [if IE]
     = stylesheet_link_tag "ie"
 
@@ -29,7 +29,7 @@
   = render :partial => "common/footer"
 
 = content_for(:javascripts_block) do
-  = include_javascripts :common
+  = javascript_include_tag "common"
   %script{ :type => "text/javascript" }
     -if protect_against_forgery?
       :plain
