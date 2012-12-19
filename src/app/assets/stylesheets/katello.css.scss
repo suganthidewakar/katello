@@ -1,3 +1,4 @@
+@import "compass";
 @import "compass/reset";
 @import "overrides";
 @import "alchemy/composites/shell";
@@ -22,12 +23,12 @@
 @import "widgets/path_selector";
 @import "katello_sprites";
 
-@import "jquery-ui-1.8.11.custom.css";
-@import "jquery.loadmask.css";
-@import "jquery.jnotify.css";
-@import "jquery.treeTable.css";
-@import "jquery.jscrollpane.css";
-@import "jquery.tipsy.css";
+@import "jquery-ui-1.8.11.custom";
+@import "jquery.loadmask";
+@import "jquery.jnotify";
+@import "jquery.treeTable";
+@import "jquery.jscrollpane";
+@import "jquery.tipsy";
 
 pre  { text-indent: 18px; }
 a { outline: 0 none;}
@@ -370,7 +371,7 @@ table {
     position: relative;
     width: 16px; height: 16px;
     margin: 2px 2px 0px 6px;
-    background: url(../../../images/icons/action-icons.png) no-repeat 0 0;
+    background: image-url("alchemy/icons/action-icons.png") no-repeat 0 0;
     float: left;
     
     &.edit  { background-position: -16px 0;}

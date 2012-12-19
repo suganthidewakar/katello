@@ -25,7 +25,7 @@ Src::Application.configure do
   log_level_sql = (ENV['KATELLO_LOGGING_SQL'] || "fatal").dup
   config.active_record.logger = KatelloLogger.new("#{Rails.root}/log/production_sql.log", log_level_sql)
   config.colorize_logging = false
-
+ 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
 
@@ -57,9 +57,6 @@ Src::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # Do not update compass SASS files in production (we precompile them)
-  Sass::Plugin.options[:never_update] = true
-
   # if paranoia is set to true even children of Exception will be rescued
   # set it true in production
   config.exception_paranoia = true
@@ -77,8 +74,24 @@ Src::Application.configure do
   # config.assets.manifest = YOUR_PATH
    
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-  # config.assets.precompile += %w( search.js )
-   
+  #config.assets.precompile += %w( katello.css )
+
+  config.assets.precompile << Proc.new { |path|
+    if path =~ /\.(css|js)\z/
+      full_path = Rails.application.assets.resolve(path).to_path
+      app_assets_path = Rails.root.join('app', 'assets').to_path
+      if full_path.starts_with? app_assets_path
+        puts "including asset: " + full_path
+        true
+      else
+        puts "excluding asset: " + full_path
+        false
+      end
+    else
+      false
+    end
+  }
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 end

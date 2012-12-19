@@ -25,6 +25,7 @@ Src::Application.configure do
   config.active_record.logger = Logger.new("#{Rails.root}/log/development_sql.log")
 
   # Development asset pipeline settings
+  config.assets.compile   = true
   config.assets.compress  = false
   config.assets.debug     = true
 

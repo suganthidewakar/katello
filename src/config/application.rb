@@ -106,7 +106,9 @@ module Src
         end
       end
     end
+
     prefix = ENV['RAILS_RELATIVE_URL_ROOT'] || '/'
+
     if (port.nil?)
       config.action_mailer.default_url_options = {:host => host + prefix, :protocol => protocol}
     else
@@ -129,8 +131,6 @@ module Src
     # added to handle new asset pipeline
     config.assets.enabled = true
     config.assets.version = '1.0'
-    config.assets.prefix  = '/assets'
-    config.sass.load_paths << File.expand_path('../vendor/assets/stylesheets/')
   end
 end
 
