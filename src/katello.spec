@@ -48,17 +48,17 @@ Requires:       mod_ssl
 Requires:       openssl
 Requires:       elasticsearch
 Requires:       rubygems
-Requires:       rubygem(rails) >= 3.0.10
+Requires:       rubygem(rails) >= 3.2.6
 Requires:       rubygem(haml) >= 3.1.2
 Requires:       rubygem(haml-rails)
 Requires:       rubygem(json)
 Requires:       rubygem(rest-client)
-Requires:       rubygem(jammit)
 Requires:       rubygem(rails_warden)
 Requires:       rubygem(net-ldap)
-Requires:       rubygem(compass) >= 0.11.5
-Requires:       rubygem(compass) < 0.12
+Requires:       rubygem(sass-rails)
+Requires:       rubygem(compass-rails)
 Requires:       rubygem(compass-960-plugin) >= 0.10.4
+Requires:       rubygem(alchemy)
 Requires:       rubygem(oauth)
 Requires:       rubygem(i18n_data) >= 0.2.6
 Requires:       rubygem(gettext_i18n_rails)
@@ -72,7 +72,6 @@ Requires:       rubygem(daemons) >= 1.1.4
 Requires:       rubygem(uuidtools)
 Requires:       rubygem(thin)
 Requires:       rubygem(fssm)
-Requires:       rubygem(sass)
 Requires:       rubygem(chunky_png)
 Requires:       rubygem(tire) >= 0.3.0
 Requires:       rubygem(tire) < 0.4
@@ -108,17 +107,16 @@ BuildRequires:  coreutils findutils sed
 BuildRequires:  rubygems
 BuildRequires:  rubygem-rake
 BuildRequires:  rubygem(gettext)
-BuildRequires:  rubygem(jammit)
 BuildRequires:  rubygem(chunky_png)
 BuildRequires:  rubygem(fssm) >= 0.2.7
-BuildRequires:  rubygem(compass) >= 0.11.5
+BuildRequires:  rubygem(sass-rails)
+BuildRequires:  rubygem(compass-rails)
 BuildRequires:  rubygem(compass-960-plugin) >= 0.10.4
 BuildRequires:  java >= 0:1.6.0
 BuildRequires:  rubygem(alchemy) >= 1.0.0
 
 # we require this to be able to build api-docs
-BuildRequires:       rubygem(rails) >= 3.0.10
-BuildRequires:       rubygem(haml) >= 3.1.2
+BuildRequires:       rubygem(rails) >= 3.2.6
 BuildRequires:       rubygem(haml-rails)
 BuildRequires:       rubygem(json)
 BuildRequires:       rubygem(rest-client)
@@ -136,7 +134,6 @@ BuildRequires:       rubygem(prawn)
 BuildRequires:       rubygem(daemons) >= 1.1.4
 BuildRequires:       rubygem(uuidtools)
 BuildRequires:       rubygem(thin)
-BuildRequires:       rubygem(sass)
 BuildRequires:       rubygem(tire) >= 0.3.0
 BuildRequires:       rubygem(tire) < 0.4
 BuildRequires:       rubygem(ldap_fluff)
@@ -358,10 +355,6 @@ export RAILS_ENV=build
 #check for malformed gettext strings
 script/check-gettext.rb -m -i
 
-#copy alchemy
-ALCHEMY_DIR=$(rpm -ql rubygem-alchemy | grep -o '/.*/vendor' | sed 's/vendor$//' | head -n1)
-cp -R $ALCHEMY_DIR* ./vendor/alchemy
-
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 
@@ -371,13 +364,9 @@ if [ -d branding ] ; then
 fi
 
 %if ! 0%{?fastbuild:1}
-    #compile SASS files
-    echo Compiling SASS files...
-    compass compile
-
     #generate Rails JS/CSS/... assets
     echo Generating Rails assets...
-    LC_ALL="en_US.UTF-8" jammit --config config/assets.yml -f
+    LC_ALL="en_US.UTF-8" rake assets:precompile
 
     #create mo-files for L10n (since we miss build dependencies we can't use #rake gettext:pack)
     echo Generating gettext files...
