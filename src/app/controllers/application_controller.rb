@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{|exception| render_404})
   end
 
-  rescue_from ActionController::UnknownController do |exception|
+  rescue_from ::AbstractController::ActionNotFound do |exception|
     execute_rescue(exception, lambda{|exception| render_404})
   end
 
