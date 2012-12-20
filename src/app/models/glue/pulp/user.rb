@@ -24,14 +24,14 @@ module Glue::Pulp::User
 
   module InstanceMethods
 
-    def initialize(attrs = nil)
+    def initialize(attrs=nil, options={})
       unless attrs.nil?
         attrs = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 
-      super(attrs)
+      super(attrs, options)
     end
 
     def set_pulp_user

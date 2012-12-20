@@ -61,7 +61,7 @@ module Glue::Candlepin::Consumer
         end
 
         attrs_used_by_model = attrs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
         if attrs_used_by_model["environment"].is_a? Hash
           attrs_used_by_model.delete("environment")
@@ -186,7 +186,7 @@ module Glue::Candlepin::Consumer
     end
 
     def reject_db_columns(cp_json)
-      cp_json.reject {|k,v| attributes_from_column_definition.keys.member?(k.to_s) }
+      cp_json.reject {|k,v| self.class.column_defaults.keys.member?(k.to_s) }
     end
 
     def save_candlepin_orchestration

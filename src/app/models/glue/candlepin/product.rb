@@ -76,7 +76,7 @@ module Glue::Candlepin::Product
 
   module InstanceMethods
 
-    def initialize(attribs = nil)
+    def initialize(attribs=nil, options={})
       unless attribs.nil?
         attributes_key = attribs.has_key?(:attributes) ? :attributes : 'attributes'
         if attribs.has_key?(attributes_key)
@@ -88,7 +88,7 @@ module Glue::Candlepin::Product
 
         # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
         attribs = attribs.reject do |k, v|
-          !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+          !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
         end
       end
 

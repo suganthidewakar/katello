@@ -79,7 +79,7 @@ class Product < ActiveRecord::Base
     }
   end
 
-  def initialize(attrs = nil)
+  def initialize(attrs=nil, options={})
 
     unless attrs.nil?
       attrs = attrs.with_indifferent_access
@@ -94,7 +94,7 @@ class Product < ActiveRecord::Base
 
       # ugh. hack-ish. otherwise we have to modify code every time things change on cp side
       attrs = attrs.reject do |k, v|
-        !attributes_from_column_definition.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
+        !self.class.column_defaults.keys.member?(k.to_s) && (!respond_to?(:"#{k.to_s}=") rescue true)
       end
     end
 
