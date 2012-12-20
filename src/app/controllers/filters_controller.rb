@@ -102,13 +102,13 @@ class FiltersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
-                                                                       :name=>controller_display_name}
+    render :partial => "edit", :locals => {:filter => @filter, :editable=>@filter.editable?,
+                                           :name=>controller_display_name}
   end
 
   def new
     @filter = Filter.new
-    render :partial => "new", :layout => "tupane_layout"
+    render :partial => "new"
   end
 
   def create
@@ -125,7 +125,7 @@ class FiltersController < ApplicationController
   end
 
   def products
-    render :partial => "products", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
+    render :partial => "products", :locals => {:filter => @filter, :editable=>@filter.editable?,
                                                                        :name=>controller_display_name}
   end
 
@@ -174,8 +174,8 @@ class FiltersController < ApplicationController
   end
 
   def packages
-    render :partial => "packages", :layout => "tupane_layout", :locals => {:filter => @filter, :editable=>@filter.editable?,
-                                                                       :name=>controller_display_name}
+    render :partial => "packages", :locals => {:filter => @filter, :editable=>@filter.editable?,
+                                               :name=>controller_display_name}
   end
 
   def add_packages

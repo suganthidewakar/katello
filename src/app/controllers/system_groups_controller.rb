@@ -62,7 +62,7 @@ class SystemGroupsController < ApplicationController
 
   def new
     @group = SystemGroup.new
-    render :partial => 'new', :layout => 'tupane_layout'
+    render :partial => 'new'
   end
 
   def create
@@ -97,9 +97,8 @@ class SystemGroupsController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:filter => @group, :name=>controller_display_name,
-                                                                       :editable=>@group.editable?
-                                                                       }
+    render :partial => "edit", :locals => {:filter => @group, :name=>controller_display_name,
+                                           :editable=>@group.editable?}
   end
 
   def show
@@ -177,7 +176,7 @@ class SystemGroupsController < ApplicationController
 
   def systems
     @system_joins = @group.system_system_groups.sort_by{|a| a.system.name}
-    render :partial => "systems", :layout => "tupane_layout",
+    render :partial => "systems",
            :locals => {:filter => @group, :name=>controller_display_name, :editable=>@group.editable?,
                        :systems_deletable=>@group.systems_deletable?}
   end

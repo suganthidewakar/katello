@@ -58,7 +58,7 @@ class ProvidersController < ApplicationController
 
   def products_repos
     @products = @provider.products
-    render :partial => "products_repos", :layout => "tupane_layout", :locals => {:provider => @provider,
+    render :partial => "products_repos", :locals => {:provider => @provider,
                                          :providers => @providers, :products => @products, :editable=>@provider.editable?,
                                          :repositories_cloned_in_envrs=>repositories_cloned_in_envrs}
   end
@@ -98,7 +98,7 @@ class ProvidersController < ApplicationController
   end
 
   def edit
-    render :partial => "edit", :layout => "tupane_layout", :locals => {:provider => @provider, :editable=>@provider.editable?,
+    render :partial => "edit", :locals => {:provider => @provider, :editable=>@provider.editable?,
                                                                        :repositories_cloned_in_envrs=>repositories_cloned_in_envrs,
                                                                        :name=>controller_display_name}
   end
