@@ -61,7 +61,7 @@ class KTEnvironment < ActiveRecord::Base
   include Authorization
   include Glue::Candlepin::Environment if AppConfig.use_cp
   include Glue if AppConfig.use_cp
-  set_table_name "environments"
+  self.table_name = "environments"
   include Katello::LabelFromName
   acts_as_reportable
 
