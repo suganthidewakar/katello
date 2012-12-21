@@ -65,7 +65,6 @@ class User < ActiveRecord::Base
   def not_ldap_mode?
     return AppConfig.warden != 'ldap'
   end
-
 #  validates_each :own_role do |model, attr, value|
 #    #This is enforced throught a user's self role where a permission with a tag is created
 #    #that has the environment id of the default environment for the user

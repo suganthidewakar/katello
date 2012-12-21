@@ -12,6 +12,8 @@
 
 
 class Organization < ActiveRecord::Base
+  attr_accessible :name, :label
+
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp
   include Authorization
