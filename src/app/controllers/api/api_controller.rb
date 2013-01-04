@@ -161,7 +161,7 @@ class Api::ApiController < ActionController::Base
       raise ArgumentError.new("Expected ForemanModel::Invalid or ActiveRecord::RecordInvalid exception.")
     end
 
-    errors.each_pair do |c,e|
+    errors.messages.each_pair do |c,e|
       logger.error "#{c}: #{e}"
     end
 

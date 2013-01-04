@@ -94,19 +94,19 @@ describe ProductsController, :katello => true do
       Provider.stub!(:find).and_return(@provider)
       @gpg = GpgKey.create!(:name =>"GPG", :organization=>@organization, :content=>"bar")
     end
+
     context "when creating a product" do
       before do
         @prod_name = "booyeah"
         post :create, :provider_id => @provider.id, :product => {:name=> @prod_name, :gpg_key => @gpg.id.to_s, :label=>"boo"}
       end
-      specify {response.should be_success}
-      subject{Product.find_by_name(@prod_name)}
-      it {should_not be_nil}
-      its(:name){should == @prod_name}
-      its(:gpg_key){should == @gpg}
+
+      specify       { response.should be_success }
+      subject       { Product.find_by_name(@prod_name) }
+      it            { should_not be_nil }
+      its(:name)    { should == @prod_name }
+      its(:gpg_key) { should == @gpg }
     end
-
-
 
     context "when updating a product" do
       before do

@@ -108,9 +108,10 @@ describe SystemGroup do
     it "should call out to pulp when removing" do
       Resources::Pulp::ConsumerGroup.should_receive(:add_consumer).once
       Resources::Pulp::ConsumerGroup.should_receive(:delete_consumer).once
-      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org, :systems=>[@system])
-      grp.systems = grp.systems - [@system]
+      grp = SystemGroup.create!(:name=>"TestGroup", :organization=>@org)
       grp.save!
+      grp.systems << @system
+      grp.systems = grp.systems - [@system]
     end
   end
 

@@ -144,7 +144,7 @@ describe OrganizationsController do
 
     it 'should allow for an offset' do
       controller.should_receive(:render_panel_direct) { |obj_class, options, search, start, sort, filters|
-        start.should == 5
+        start.should == "5"
         controller.stub(:render)
       }
       get 'items', :offset=>5

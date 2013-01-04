@@ -38,7 +38,7 @@ describe Api::ActivationKeysController do
   end
 
   context "before_filter :find_activation_key should retrieve activation key" do
-    before { ActivationKey.should_receive(:find).once.with(123).and_return(@activation_key) }
+    before { ActivationKey.should_receive(:find).once.with('123').and_return(@activation_key) }
 
     specify { get :show, :id => 123 }
     specify { put :update, :id => 123, :activation_key => {:description => "genius"} }
@@ -54,7 +54,7 @@ describe Api::ActivationKeysController do
 
   context "before_filter :find_environment should retrieve environment" do
     before do
-      KTEnvironment.should_receive(:find).once.with(123).and_return(@environment)
+      KTEnvironment.should_receive(:find).once.with('123').and_return(@environment)
     end
 
     specify { get :index, :environment_id => 123 }

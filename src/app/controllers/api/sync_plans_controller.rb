@@ -69,7 +69,7 @@ class Api::SyncPlansController < Api::ApiController
     param :sync_date, String, :desc => "start datetime of synchronization"
   end
   def create
-    sync_date = params[:sync_plan][:sync_date]
+    sync_date = params[:sync_plan][:sync_date].to_time
     if not sync_date.kind_of? Time
         raise _("Date format is incorrect.")
     end
@@ -87,7 +87,7 @@ class Api::SyncPlansController < Api::ApiController
     param :sync_date, String, :desc => "start datetime of synchronization"
   end
   def update
-    sync_date = params[:sync_plan][:sync_date]
+    sync_date = params[:sync_plan][:sync_date].to_time
     if not sync_date.nil? and not sync_date.kind_of? Time
         raise _("Date format is incorrect.")
     end

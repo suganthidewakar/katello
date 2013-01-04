@@ -35,8 +35,8 @@ describe Api::TemplatesContentController do
   include LoginHelperMethods
   include AuthorizationHelperMethods
 
-  let(:template_id) { 1 }
-  let(:non_library_template_id) { 2 }
+  let(:template_id) { "1" }
+  let(:non_library_template_id) { "2" }
   let(:product_cp_id) { 123456 }
   let(:package_name) { "package-x.y-z" }
   let(:package_group_name) { "package_group" }

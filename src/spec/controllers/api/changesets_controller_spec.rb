@@ -98,7 +98,7 @@ describe Api::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should call PromotionChangeset.first" do
-      Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
+      Changeset.should_receive(:find).with(CSET_ID.to_s).and_return(@changeset)
       req
     end
   end
@@ -129,7 +129,7 @@ describe Api::ChangesetsController, :katello => true do
     it_should_behave_like "protected action"
 
     it "should remove the changeset" do
-      Changeset.should_receive(:find).with(CSET_ID).and_return(@changeset)
+      Changeset.should_receive(:find).with(CSET_ID.to_s).and_return(@changeset)
       @changeset.should_receive(:destroy).once
 
       req

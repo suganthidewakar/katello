@@ -94,7 +94,7 @@ describe UsersController do
        new_email = "foo-user@somewhere-new.com"
        put 'update', {:id => @user.id, :user => {:email=>new_email}}
        response.should be_success
-       assert !User.where(:id => @user.id, :email => new_email).empty?
+       User.where(:id => @user.id, :email => new_email).should_not be_empty
     end
 
     it_should_behave_like "bad request"  do
@@ -157,20 +157,20 @@ describe UsersController do
     it "should not enable and disable a helptip if user's helptips are disabled" do     
       post 'disable_helptip', {:key=>"apples"}
       user = User.find(@user.id)
-      assert user.help_tips.size == 1    
+      assert_equal 1, user.help_tips.size
       
       @user.helptips_enabled = false
-      @user.save
+      @user.save!
       
       #disabling a 2nd helptip shouldn't cause it to be disabled
       post 'disable_helptip', {:key=>"oranges"}  
       user = User.find(@user.id)
-      assert user.help_tips.size == 1    
+      assert_equal 1, user.help_tips.size
       
       #enabling the 1st helptip shouldn't cause it to be enabled
       post 'enable_helptip', {:key=>"apples"}  
       user = User.find(@user.id)
-      assert user.help_tips.size == 1          
+      assert_equal 1, user.help_tips.size
     end
   end  
 

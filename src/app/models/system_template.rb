@@ -24,6 +24,8 @@ class ParentTemplateValidator < ActiveModel::Validator
 end
 
 class SystemTemplate < ActiveRecord::Base
+  attr_accessible :name, :description, :environment, :parent, :environment_id
+
   #include Authorization
   include LazyAccessor
   include AsyncOrchestration

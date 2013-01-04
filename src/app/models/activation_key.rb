@@ -11,6 +11,10 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class ActivationKey < ActiveRecord::Base
+  attr_accessible :name, :description, :environment, :organization, :usage_limit,
+                  :system_template, :system_groups, :user, :system_template_id,
+                  :environment_id
+
   include Authorization
   include IndexedModel
 

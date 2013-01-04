@@ -11,6 +11,8 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class SyncPlan < ActiveRecord::Base
+  attr_accessible :name, :description, :sync_date, :interval, :organization
+
   include Glue
   include IndexedModel
 

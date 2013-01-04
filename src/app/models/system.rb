@@ -19,6 +19,10 @@ class NonLibraryEnvironmentValidator < ActiveModel::EachValidator
 end
 
 class System < ActiveRecord::Base
+  attr_accessible :name, :description, :user, :system_template, :system_groups,
+                  :environment, :cp_type, :facts, :uuid, :system_group_ids, :environment_id,
+                  :sockets, :serviceLevel, :installedProducts, :releaseVer, :location
+
   include Glue::Candlepin::Consumer
   include Glue::Pulp::Consumer if AppConfig.katello?
   include Glue

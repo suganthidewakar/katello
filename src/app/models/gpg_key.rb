@@ -23,6 +23,8 @@ class ContentValidator < ActiveModel::EachValidator
 end
 
 class GpgKey < ActiveRecord::Base
+  attr_accessible :name, :description, :content, :organization
+
   include IndexedModel
 
 

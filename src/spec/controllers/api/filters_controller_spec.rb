@@ -109,7 +109,7 @@ describe Api::FiltersController, :katello => true do
     end
 
     it "should find product" do
-      Product.should_receive(:find_by_cp_id).once.with(product_id).and_return(@product)
+      Product.should_receive(:find_by_cp_id).once.with(product_id.to_s).and_return(@product)
       put :update_product_filters, :organization_id => @organization.label, :product_id => product_id, :filters => []
     end
 

@@ -127,7 +127,6 @@ module Glue
         task.status = execute({:action => task.action}) ? "completed" : "failed"
         q_active += 1
       end
-
       # if we have no failures - we are done
       return true if (errors.empty? && q.failed.empty?)
       raise Errors::OrchestrationException.new("Errors occurred during orchestration #{errors.inspect}\n Queue Failed - #{q.failed.inspect}" )
@@ -182,7 +181,7 @@ module Glue
 
     def setup_clone
       return if new_record?
-      @old = clone
+      @old = clone.dup
       for key in (changed_attributes.keys - ["updated_at"])
         @old.send "#{key}=", changed_attributes[key]
       end

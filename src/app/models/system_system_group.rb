@@ -20,7 +20,7 @@ class SystemSystemGroup < ActiveRecord::Base
   validate :validate_max_systems_not_exceeded
   validate :validate_system_environments
 
-  def validate_max_systems_not_exceeded
+  def validate_max_systems_not_exceeded(*args)
     if new_record?
       system_group = SystemGroup.find(self.system_group_id)
       if (system_group) and (system_group.max_systems != SystemGroup::UNLIMITED_SYSTEMS) and (system_group.systems.size >= system_group.max_systems)

@@ -290,34 +290,32 @@ describe Api::SystemGroupsController, :katello => true do
        end
      end
 
-     describe "DELETE destroy_systems" do
-       let(:action) {:destroy_systems}
-       let(:req) { delete :destroy_systems, :id=>@group.id, :organization_id=>@org.label}
-       let(:authorized_user) do
-         user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @org) }
-       end
-       let(:unauthorized_user) do
-         user_without_permissions
-       end
-       it_should_behave_like "protected action"
+      describe "DELETE destroy_systems" do
+         let(:action) {:destroy_systems}
+         let(:req) { delete :destroy_systems, :id=>@group.id, :organization_id=>@org.label}
+         let(:authorized_user) do
+           user_with_permissions { |u| u.can(:delete_systems, :system_groups, @group.id, @org) }
+         end
+         let(:unauthorized_user) do
+           user_without_permissions
+         end
+         it_should_behave_like "protected action"
 
 
-       it "should complete successfully" do
-         @group.systems  = [@system]
-         @group.save
+        it "should complete successfully" do
+          @group.systems  = [@system]
+          @group.save
 
-         System.stub(:find).and_return([@system])
-         @system.should_receive(:destroy)
-         controller.stub(:render)
+          Resources::Pulp::Consumer.stub(:destroy).and_return(true)
+          Resources::Candlepin::Consumer.stub(:destroy).and_return(true)
+          @group.stub(:systems).and_return([@system])
+          controller.stub(:render)
 
-         delete :destroy_systems, :organization_id=>@org.label, :id=>@group.id
-         response.should be_success
-         SystemGroup.where(:name=>@group.name).first.should be_nil
+          delete :destroy_systems, :organization_id=>@org.label, :id=>@group.id
+          response.should be_success
+          SystemGroup.where(:name=>@group.name).first.should be_nil
        end
      end
 
-
    end
-
-
 end

@@ -114,7 +114,7 @@ class ActivationKeysController < ApplicationController
     notify.success _("Subscriptions successfully added to Activation Key '%s'.") % @activation_key.name
 
     respond_to do |format| 
-      format.html { render :partial => "available_subscriptions_update.js" }
+      format.html   { render :partial => "available_subscriptions_update.js" }
     end 
   end
 

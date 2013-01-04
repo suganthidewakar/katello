@@ -31,7 +31,7 @@ describe Api::RolesController do
 
   before (:each) do
     @role= Role.new(:name => "test_role", :description=> "role description")
-    Role.stub(:find).with(role_id).and_return(@role)
+    Role.stub(:find).with(role_id.to_s).and_return(@role)
 
     login_user_api
   end
@@ -59,7 +59,7 @@ describe Api::RolesController do
     it_should_behave_like "protected action"
 
     it 'should find a role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
   end
@@ -100,7 +100,7 @@ describe Api::RolesController do
     end
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
 
@@ -132,7 +132,7 @@ describe Api::RolesController do
     it_should_behave_like "protected action"
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
 

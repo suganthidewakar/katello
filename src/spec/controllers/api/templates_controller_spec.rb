@@ -29,9 +29,9 @@ describe Api::TemplatesController, :katello => true do
     @environment2.id = 3
     @library = KTEnvironment.new(:name => 'Library', :library => true, :label => 'library')
     @library.id = 2
-    KTEnvironment.stub(:find).with(@library.id).and_return(@library)
-    KTEnvironment.stub(:find).with(@environment.id).and_return(@environment)
-    KTEnvironment.stub(:find).with(@environment2.id).and_return(@environment2)
+    KTEnvironment.stub(:find).with(@library.id.to_s).and_return(@library)
+    KTEnvironment.stub(:find).with(@environment.id.to_s).and_return(@environment)
+    KTEnvironment.stub(:find).with(@environment2.id.to_s).and_return(@environment2)
 
     @organization.library = @library
     @organization.environments << @library
@@ -169,7 +169,7 @@ describe Api::TemplatesController, :katello => true do
 
     describe "show" do
       it "should call SystemTemplate.first" do
-        SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
+        SystemTemplate.should_receive(:find).with(TEMPLATE_ID.to_s).and_return(@tpl)
         get :show, :id => TEMPLATE_ID
       end
     end
@@ -253,7 +253,7 @@ describe Api::TemplatesController, :katello => true do
 
     describe "destroy" do
       it "should remove the specified template" do
-        SystemTemplate.should_receive(:find).with(TEMPLATE_ID).and_return(@tpl)
+        SystemTemplate.should_receive(:find).with(TEMPLATE_ID.to_s).and_return(@tpl)
         @tpl.should_receive(:destroy).once
 
         delete :destroy, :id => TEMPLATE_ID
@@ -263,13 +263,8 @@ describe Api::TemplatesController, :katello => true do
 
     describe "import" do
       before(:each) do
-        @temp_file = mock(File)
-        @temp_file.stub(:read).and_return('FILE_DATA')
-        @temp_file.stub(:close)
-        @temp_file.stub(:write)
-        @temp_file.stub(:path).and_return("/a/b/c")
-
-        File.stub(:new).and_return(@temp_file)
+        test_document = "#{Rails.root}/spec/assets/gpg_test_key"
+        @temp_file = Rack::Test::UploadedFile.new(test_document, "text/plain")
         KTEnvironment.stub(:find).and_return(@library)
       end
 

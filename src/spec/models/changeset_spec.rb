@@ -207,6 +207,10 @@ describe Changeset, :katello => true do
         @environment.prior.stub(:products).and_return([@prod])
         @environment.prior.products.stub(:find_by_name).and_return(@prod)
         @environment.prior.products.stub(:find_by_cp_id).and_return(@prod)
+        
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
       end
 
 
@@ -431,7 +435,7 @@ describe Changeset, :katello => true do
         @repo.stub(:get_clone).and_return(@clone)
         @repo.stub(:get_cloned_in).and_return(nil)
         @prod.stub(:repos).and_return([@repo])
-        @prod.stub(:repos).and_return([@repo])
+        @prod.stub(:repos).with(@environment).and_return([@repo])
         @prod.stub_chain(:repos, :where).and_return([@repo])
 
         @clone.stub(:index_packages).and_return()
@@ -449,6 +453,10 @@ describe Changeset, :katello => true do
         Glue::Pulp::Package.stub(:index_packages).and_return(true)
         Glue::Pulp::Errata.stub(:index_errata).and_return(true)
         Glue::Pulp::Repo.stub(:add_repo_packages)
+
+        ChangesetDistribution.any_instance.stub(:product).and_return(@prod)
+        ChangesetErratum.any_instance.stub(:product).and_return(@prod)
+        ChangesetPackage.any_instance.stub(:product).and_return(@prod)
       end
 
       it "should fail if the product is not in the review phase" do

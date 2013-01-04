@@ -71,6 +71,7 @@ module Glue::Pulp::User
         when :create
           pre_queue.create(:name => "create pulp user: #{self.username}", :priority => 3, :action => [self, :set_pulp_user])
           pre_queue.create(:name => "add 'super-user' to: #{self.username}", :priority => 4, :action => [self, :set_super_user_role])
+        else
       end
     end
 

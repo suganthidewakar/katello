@@ -33,8 +33,8 @@ describe Api::PermissionsController do
     @org = Organization.create!(:name=>'test_org', :label=> 'test_org')
     @role = Role.new(:name => "test_role", :description=> "role description")
     @perm = Permission.new(:name => "permission_x", :description => "permission description", :role => @role)
-    Role.stub(:find).with(role_id).and_return(@role)
-    Permission.stub(:find).with(perm_id).and_return(@perm)
+    Role.stub(:find).with(role_id.to_s).and_return(@role)
+    Permission.stub(:find).with(perm_id.to_s).and_return(@perm)
 
     login_user_api
   end
@@ -47,7 +47,7 @@ describe Api::PermissionsController do
     it_should_behave_like "protected action"
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
 
@@ -65,7 +65,7 @@ describe Api::PermissionsController do
     it_should_behave_like "protected action"
 
     it 'should find the permission' do
-      Permission.should_receive(:find).with(perm_id)
+      Permission.should_receive(:find).with(perm_id.to_s)
       req
     end
   end
@@ -86,7 +86,7 @@ describe Api::PermissionsController do
 
 
     it 'should find the role' do
-      Role.should_receive(:find).with(role_id)
+      Role.should_receive(:find).with(role_id.to_s)
       req
     end
 
@@ -142,7 +142,7 @@ describe Api::PermissionsController do
     it_should_behave_like "protected action"
 
     it 'should find the permission' do
-      Permission.should_receive(:find).with(perm_id)
+      Permission.should_receive(:find).with(perm_id.to_s)
       req
     end
 

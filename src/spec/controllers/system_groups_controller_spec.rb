@@ -321,8 +321,9 @@ describe SystemGroupsController, :katello => true do
         @group.systems  = [@system]
         @group.save
 
-        System.stub(:find).and_return([@system])
-        @system.should_receive(:destroy)
+        Resources::Pulp::Consumer.stub(:destroy).and_return(true)
+        Resources::Candlepin::Consumer.stub(:destroy).and_return(true)
+        @group.stub(:systems).and_return([@system])
         controller.stub(:render)
 
         delete :destroy_systems, :id=>@group.id

@@ -84,10 +84,6 @@ class ApplicationController < ActionController::Base
     execute_rescue(exception, lambda{|exception| render_404})
   end
 
-  rescue_from ActionController::UnknownAction do |exception|
-    execute_rescue(exception, lambda{|exception| render_404})
-  end
-
   rescue_from Errors::SecurityViolation do |exception|
     execute_rescue(exception, lambda{|exception| render_403})
   end

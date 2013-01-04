@@ -12,7 +12,7 @@
 
 
 class Organization < ActiveRecord::Base
-  attr_accessible :name, :label
+  attr_accessible :name, :label, :description
 
   include Glue::Candlepin::Owner if AppConfig.use_cp
   include Glue if AppConfig.use_cp

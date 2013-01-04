@@ -109,7 +109,7 @@ describe Api::GpgKeysController, :katello => true do
     it_should_behave_like "protected action"
 
     it "returns JSON with updated key" do
-      GpgKey.stub(:find).with(@gpg_key.id).and_return(@gpg_key)
+      GpgKey.stub(:find).with(@gpg_key.id.to_s).and_return(@gpg_key)
       req
       JSON.parse(response.body).slice(*%w[name content]).should == req_params[:gpg_key]
     end

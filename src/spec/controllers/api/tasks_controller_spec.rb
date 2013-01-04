@@ -67,7 +67,7 @@ describe Api::TasksController do
     it_should_behave_like "protected action"
 
     it "should retrieve task specified by uuid" do
-      TaskStatus.should_receive(:find_by_uuid).once.with(1).and_return(@t)
+      TaskStatus.should_receive(:find_by_uuid).once.with("1").and_return(@t)
       req
     end
 

@@ -15,6 +15,9 @@ require 'util/threadsession'
 require 'util/password'
 
 class User < ActiveRecord::Base
+  attr_accessible :username, :email, :password, :page_size, :helptips_enabled, 
+                  :roles, :role_ids, :disabled
+
   include Glue::Pulp::User if AppConfig.katello?
   include Glue::Foreman::User if AppConfig.use_foreman
   include Glue if AppConfig.use_cp
