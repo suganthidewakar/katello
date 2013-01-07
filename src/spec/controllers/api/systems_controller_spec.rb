@@ -255,17 +255,17 @@ describe Api::SystemsController do
 
     it "should show all systems in the organization" do
       get :index, :organization_id => @organization.label
-      response.body.should == [@system_1, @system_2].to_json
+      response.body.should be_json([@system_1, @system_2])
     end
 
     it "should show all systems for the owner" do
       get :index, :owner => @organization.label
-      response.body.should == [@system_1, @system_2].to_json
+      response.body.should be_json([@system_1, @system_2])
     end
 
     it "should show only systems in the environment" do
       get :index, :environment_id => @environment_1.id
-      response.body.should == [@system_1].to_json
+      response.body.should be_json([@system_1])
     end
 
 

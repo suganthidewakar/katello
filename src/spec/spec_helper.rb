@@ -73,4 +73,15 @@ Webrat.configure do |config|
   config.mode = :rails
 end
 
+# @response.body.should be_json({:my => {:expected => ["json","hash"]}})
+# @response.body.should be_json('{"my":{"expected":["json","hash"]}}')
+RSpec::Matchers.define :be_json do |expected|
+  match do |actual|
+    actual = ActiveSupport::JSON.decode(actual).with_indifferent_access
+    expected = ActiveSupport::JSON.decode(expected) unless expected.is_a?(Hash)
+    expected = expected.with_indifferent_access
+    actual.diff(expected) == {}
+  end
+end
+
 require 'spec/support/monkey_rspec_trac_creation_line_of_mocks' # has to be loaded after RSpec
