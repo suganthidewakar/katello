@@ -383,7 +383,7 @@ describe Product, :katello => true do
         @repo.environment_product = ep
         @repo.save!
 
-        Resources::Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, @product.filters.collect(&:pulp_id)).and_return([])
+        Resources::Pulp::Repository.should_receive(:clone_repo).once.with(anything, anything, anything, match_array(@product.filters.collect(&:pulp_id))).and_return([])
         @product.promote @organization.library, @environment1
       end
 
