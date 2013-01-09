@@ -19,7 +19,8 @@ end
 
 class Product < ActiveRecord::Base
   attr_accessible :cp_id, :label, :productContent, :name, :description, 
-                  :environments, :provider, :multiplier, :attrs, :gpg_key
+                  :environments, :provider, :multiplier, :attrs, :gpg_key,
+                  :gpg_key_name
 
   include Glue::Candlepin::Product if AppConfig.use_cp
   include Glue::Pulp::Repos if AppConfig.katello?

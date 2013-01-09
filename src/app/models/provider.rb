@@ -11,6 +11,9 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 class Provider < ActiveRecord::Base
+  attr_accessor   :href
+  attr_accessible :name, :description, :provider_type, :organization, :href, :repository_url
+
   include Glue::Provider
   include Glue
   include AsyncOrchestration

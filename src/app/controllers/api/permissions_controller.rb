@@ -34,7 +34,7 @@ class Api::PermissionsController < Api::ApiController
   end
   def param_rules
      {
-       :create => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags ]
+       :create => { :permission => [:name, :description, :role_id, :organization_id, :verbs, :tags, :type, :all_tags ]}
      }
   end
 

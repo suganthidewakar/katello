@@ -42,7 +42,7 @@ class ChangesetAPI(KatelloAPI):
             "changeset": {
                 "name": name,
                 "description": description,
-                "type": type_in
+                "cs_type": type_in
             }
         }
         path = "/api/organizations/%s/environments/%s/changesets/" % (orgName, envId)

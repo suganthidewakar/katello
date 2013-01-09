@@ -107,7 +107,7 @@ describe Api::ChangesetsController, :katello => true do
   describe "create" do
 
     let(:action) {:create }
-    let(:req) { post :create, :changeset => {'name' => 'XXX', :type => "PROMOTION"}, :organization_id => "1", :environment_id => 1 }
+    let(:req) { post :create, :changeset => {'name' => 'XXX', :cs_type => "PROMOTION"}, :organization_id => "1", :environment_id => 1 }
     let(:authorized_user) { user_with_manage_permissions }
     let(:unauthorized_user) { user_without_manage_permissions }
     it_should_behave_like "protected action"

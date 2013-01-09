@@ -19,6 +19,10 @@ end
 require 'util/package_util'
 
 class Changeset < ActiveRecord::Base
+  attr_accessor   :cs_type
+  attr_accessible :id, :name, :description, :cs_type, :environment, :state,
+                  :environment_id, :promotion_date
+
   include Authorization
   include AsyncOrchestration
 

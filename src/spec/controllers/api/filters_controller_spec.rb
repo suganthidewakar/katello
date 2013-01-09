@@ -54,13 +54,6 @@ describe Api::FiltersController, :katello => true do
 
       post :create, :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
     end
-
-    it_should_behave_like "bad request"  do
-      let(:req) do
-        post :create, :bad_foo => "ss", :organization_id => @organization.label, :name => pulp_id, :description => description, :package_list => package_list
-      end
-    end
-
   end
 
   context "list filters" do

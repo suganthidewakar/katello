@@ -69,7 +69,7 @@ class Api::EnvironmentsController < Api::ApiController
     {
       :create => {:environment =>  ["name", "label", "description", "prior" ]},
       :update => {:environment =>  ["name", "description", "prior" ]},
-      :index => [:name, :library, :id, :organization_id]
+      :index => [:name, :library, :id, :organization_id, :environment]
     }
   end
 

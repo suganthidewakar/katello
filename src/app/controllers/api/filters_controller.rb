@@ -49,7 +49,7 @@ class Api::FiltersController < Api::ApiController
 
   def param_rules
      {
-       :create => [:name, :description, :organization_id, :package_list]
+       :create => { :filter => [:name, :description, :organization_id, :package_list]}
      }
   end
 

@@ -31,10 +31,11 @@ class Api::OrganizationsController < Api::ApiController
       :destroy => delete_test,
     }
   end
+
   def param_rules
     {
-      :create => [:name, :label, :description],
-      :update => {:organization  => [:name, :description]}
+      :create => { :organization => [:name, :label, :description]},
+      :update => { :organization  => [:name, :description]}
     }
   end
 

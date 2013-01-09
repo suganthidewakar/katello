@@ -14,7 +14,7 @@ require 'vcr'
 require 'ostruct'
 require 'yaml'
 
-require 'active_support/core_ext/class/inheritable_attributes'
+require 'active_support/core_ext/class/attribute'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'active_support/core_ext/object/to_param'
 require 'active_support/core_ext/object/to_query'

@@ -73,10 +73,10 @@ class Api::ChangesetsController < Api::ApiController
     param :name, String, :desc => "The name of the changeset"
   end
   def create
-    csType = params[:changeset][:type]
-    if params[:changeset][:type] == 'PROMOTION'
+    csType = params[:changeset][:cs_type]
+    if params[:changeset][:cs_type] == 'PROMOTION'
       @changeset = PromotionChangeset.new(params[:changeset])
-    elsif params[:changeset][:type] == 'DELETION'
+    elsif params[:changeset][:cs_type] == 'DELETION'
       @changeset = DeletionChangeset.new(params[:changeset])
     else
       raise HttpErrors::ApiError, _("Unknown changeset type, must be PROMOTION or DELETION: %s") % csType

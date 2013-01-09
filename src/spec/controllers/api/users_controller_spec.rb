@@ -90,14 +90,6 @@ describe Api::UsersController do
               }.with_indifferent_access
       end
 
-    it_should_behave_like "bad request"  do
-      let(:req) do
-        bad_req = request_params
-        bad_req[:bad_foo] = "mwahaha"
-        post :create, bad_req
-      end
-    end
-
     it "should be successful" do
       post :create, request_params
       response.should be_success
