@@ -1,3 +1,16 @@
+namespace "travis" do
+
+  task :spec_katello do |_, args|
+    Rake::Task["parallel:spec"].invoke(0, '\'\'', "--tag \"~headpin\"")
+  end
+
+
+  task :spec_headpin, :pattern, :threads do |_, args|
+    Rake::Task["parallel:spec"].invoke(0, '\'\'', "--tag \"~katello\"")
+  end
+
+end
+
 namespace "ptest" do
 
   desc "Run parallel spec tests for headpin or katello, depending on 'app_mode' in katello.yml"
@@ -24,7 +37,6 @@ namespace "ptest" do
   end
 
 end
-
 
 if ENV['method']
   if not ENV['method'].starts_with?('test_')
@@ -77,9 +89,9 @@ namespace 'minitest' do
 
       desc "Finds functions without dedicated tests"
       task "#{task}:untested" do
-        test_functions  = `grep -r 'def test_' test/glue/#{task} --include=*.rb --no-filename` 
+        test_functions  = `grep -r 'def test_' test/glue/#{task} --include=*.rb --no-filename`
         lib_functions   = `grep -r 'def self' app/models/glue/#{task} --include=*.rb --no-filename`
-        
+
         test_functions  = test_functions.split("\n").map{ |str| str.strip.split("def test_")[1] }.to_set
         lib_functions   = lib_functions.split("\n").map{ |str| str.strip.split("def ")[1].split("(").first }.to_set
 
@@ -87,7 +99,7 @@ namespace 'minitest' do
 
         if !difference.empty?
           puts difference
-          exit 1 
+          exit 1
         end
       end
 
@@ -95,7 +107,7 @@ namespace 'minitest' do
         MiniTest::Rails::Tasks::SubTestTask.new(task => 'test:prepare') do |t|
           t.libs.push 'test'
           t.pattern = "test/glue/#{task}/#{ENV['test']}_test.rb"
-        end   
+        end
       else
         desc "Runs the #{task} glue layer tests"
 
