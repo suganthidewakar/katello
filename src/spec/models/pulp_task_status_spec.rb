@@ -72,7 +72,7 @@ describe PulpTaskStatus do
         end
         @t.save!
 
-        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)
+        Runcible::Resources::Task.stub(:poll).and_return(updated_pulp_task)  if Katello.config.katello?
       end
 
       it "should fetch data from pulp" do
