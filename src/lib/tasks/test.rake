@@ -1,16 +1,3 @@
-namespace "travis" do
-
-  task :spec_katello do |_, args|
-    Rake::Task["parallel:spec"].invoke(0, '\'\'', "--tag \"~headpin\"")
-  end
-
-
-  task :spec_headpin, :pattern, :threads do |_, args|
-    Rake::Task["parallel:spec"].invoke(0, '\'\'', "--tag \"~katello\"")
-  end
-
-end
-
 namespace "ptest" do
 
   desc "Run parallel spec tests for headpin or katello, depending on 'app_mode' in katello.yml"
