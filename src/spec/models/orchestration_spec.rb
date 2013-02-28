@@ -14,7 +14,7 @@ require 'spec_helper'
 require 'errors'
 
 describe Glue do
-  class AUserModel < ActiveRecord::Base # needed a class with an AR base
+  class UserNotice < ActiveRecord::Base # needed a class with an AR base
     include Glue
 
     def process q
@@ -26,7 +26,7 @@ describe Glue do
     end
   end
 
-  before { @orchestrated = AUserModel.new }
+  before { @orchestrated = UserNotice.new }
 
   context "orchestration_for method" do
     it "should return :create for a new record" do

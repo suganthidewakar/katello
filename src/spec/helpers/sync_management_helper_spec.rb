@@ -48,7 +48,7 @@ describe SyncManagementHelper do
                                               :prior        => organization.library }) }
   let(:object) { DummyObject.new }
   let(:product_1) { Product.create!(ProductTestData::PRODUCT_WITH_ATTRS) }
-  describe "#collect_repos" do
+  describe "#collect_repos", :katello => true do #TODO headpin
     subject { object.collect_repos([product_1], environment).first }
     its(:keys) { should include(:name, :id, :type, :repos, :children, :organization) }
   end

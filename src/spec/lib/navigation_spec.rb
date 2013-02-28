@@ -70,7 +70,7 @@ describe Navigation do
    :new_subscription_navigation,
    :promotion_packages_navigation
     ].each do |menu|
-    context "##{menu}" do
+    context "##{menu}", :katello => true do #TODO headpin
       subject { @navigation.send(menu) }
       specify { check_menu_items(subject) }
     end

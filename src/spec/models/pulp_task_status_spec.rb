@@ -11,9 +11,11 @@
 # http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
 
 require 'spec_helper'
+
 include OrchestrationHelper
 include UserHelperMethods
-describe PulpTaskStatus do
+
+describe PulpTaskStatus, :katello => true do
 
   context "proxy TaskStatus for pulp task" do
     let(:pulp_task_without_error) do

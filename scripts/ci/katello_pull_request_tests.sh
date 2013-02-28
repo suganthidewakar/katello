@@ -52,7 +52,7 @@ echo "********* Running Pylint ************************"
 echo "RUNNING: PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello"
 PYTHONPATH=src/ pylint --rcfile=./etc/spacewalk-pylint.rc --additional-builtins=_ katello || exit 1
 
-cd ../
+cd ../src
 
 echo ""
 echo "********* Headpin RSPEC Unit Tests ****************"
